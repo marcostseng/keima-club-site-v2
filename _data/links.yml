@@ -1,0 +1,18 @@
+# 報名表與外部連結：填入網址即可，留空會自動捲到活動區
+# 中文、日文可以填不同的表單
+zh:
+  meetup: ""      # 例會報名表
+  beginner: "https://docs.google.com/forms/d/e/1FAIpQLScL3gx4CFjn9pvLfUHJaRecHe2cz1lY_qakSyxokxF5Elqw8g/viewform"    # 入門講座報名表：貼上報名系統寄給你的表單網址（首頁、入門目錄、每一課的報名按鈕都會更新）
+  ryuma: "https://docs.google.com/forms/d/e/1FAIpQLSesLByegTLurKhdbVR4-pviH7A36CBhAfleA8cHF3S_vKQsGw/viewform"       # 龍馬盃報名頁
+  join: ""        # 入會申請表
+  member_apply: ""   # 入會申請表（入會系統建立後填入）
+  materials: ""   # 會員教材資料夾
+  line: "https://line.me/ti/g2/umjemRRHOVe_bmcgrJ4N6sd3EMjlMPZqQQ7HbQ"   # LINE 社群「桂馬會日本將棋交流群」
+  contact: ""     # 聯絡表單（目前未使用）
+ja:
+  meetup: ""      # 例会 申込フォーム
+  ryuma: "https://docs.google.com/forms/d/e/1FAIpQLSesLByegTLurKhdbVR4-pviH7A36CBhAfleA8cHF3S_vKQsGw/viewform"       # 龍馬盃 申込ページ
+  member_apply: ""   # 入会申込フォーム（中国語版と同じ）
+  join: ""        # 入会申込フォーム（未使用）
+  line: "https://line.me/ti/g2/umjemRRHOVe_bmcgrJ4N6sd3EMjlMPZqQQ7HbQ"   # LINE「桂馬會日本將棋交流群」
+  contact: ""     # お問い合わせフォーム（現在未使用）

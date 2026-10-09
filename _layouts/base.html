@@ -1,0 +1,70 @@
+{%- assign lang = page.lang | default: "zh" -%}
+{%- assign t = site.data.i18n[lang] -%}
+{%- if lang == "ja" %}{% assign other = "zh" %}{% else %}{% assign other = "ja" %}{% endif -%}
+{%- assign o = site.data.i18n[other] -%}
+{%- assign other_url = o.home -%}
+{%- if page.ref -%}
+  {%- assign alt = site.pages | where: "ref", page.ref | where: "lang", other | first -%}
+  {%- if alt %}{% assign other_url = alt.url %}{% endif -%}
+{%- endif -%}
+<!DOCTYPE html>
+<html lang="{{ t.html_lang }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% if page.full_title %}{{ page.full_title }}{% else %}{{ page.title }}｜{{ t.site_suffix }}{% endif %}</title>
+<meta name="description" content="{{ page.description }}">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+{%- if page.ref %}
+{%- assign versions = site.pages | where: "ref", page.ref %}
+{%- for v in versions %}
+<link rel="alternate" hreflang="{{ site.data.i18n[v.lang].hreflang }}" href="{{ v.url | absolute_url }}">
+{%- if v.lang == "zh" %}
+<link rel="alternate" hreflang="x-default" href="{{ v.url | absolute_url }}">
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+<meta property="og:title" content="{% if page.full_title %}{{ page.full_title }}{% else %}{{ page.title }}｜{{ t.site_suffix }}{% endif %}">
+<meta property="og:description" content="{{ page.description }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#1E2A4A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?{{ t.fonts }}&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css">
+<!-- 流量分析：取得 token 後取消註解
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "填入你的CLOUDFLARE_TOKEN"}'></script>
+-->
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="{{ t.home }}"><span class="mini-piece" aria-hidden="true"></span>{{ t.name }}</a>
+    <div class="head-right">
+      <nav class="nav" aria-label="Menu">
+        {%- for n in t.nav %}
+        <a href="{{ n.url }}">{{ n.label }}</a>
+        {%- endfor %}
+      </nav>
+      <div class="lang-switch">
+        {%- if lang == "zh" %}
+        <span>中文</span><a href="{{ other_url }}" hreflang="ja" lang="ja">日本語</a>
+        {%- else %}
+        <a href="{{ other_url }}" hreflang="zh-Hant" lang="zh-Hant">中文</a><span>日本語</span>
+        {%- endif %}
+      </div>
+    </div>
+  </div>
+</header>
+<main id="top">
+{{ content }}
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <span>© 2026 {{ t.name }} Keima Club</span>
+    <span>{{ t.footer_note }}</span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,44 @@
+---
+layout: base
+---
+{% assign lessons = site.lessons | sort: "order" %}
+{% assign prev_no = page.order | minus: 1 %}
+{% assign next_no = page.order | plus: 1 %}
+{% assign prev = lessons | where: "order", prev_no | first %}
+{% assign next = lessons | where: "order", next_no | first %}
+
+<section class="hero learn-hero" style="padding:0">
+  <div class="wrap">
+    <div>
+      <div class="crumb"><a href="/learn/">將棋入門</a>　／　第 {{ page.order }} 課</div>
+      <h1>{{ page.title }}</h1>
+      <p class="hero-lead">{{ page.description }}</p>
+    </div>
+  </div>
+</section>
+
+<article class="article">
+  <div class="wrap">
+    {% if page.youtube and page.youtube != "" %}
+    <div class="video">
+      <iframe src="https://www.youtube-nocookie.com/embed/{{ page.youtube }}" title="{{ page.title }}" loading="lazy" allowfullscreen></iframe>
+    </div>
+    {% endif %}
+
+    <div class="prose">
+      {{ content }}
+    </div>
+
+    <div class="lesson-foot">
+      <nav class="pager" aria-label="課程導覽">
+        {% if prev %}<a class="prev" href="{{ prev.url }}"><span class="dir">上一課</span><span class="ttl">{{ prev.title }}</span></a>{% endif %}
+        {% if next %}<a class="next" href="{{ next.url }}"><span class="dir">下一課</span><span class="ttl">{{ next.title }}</span></a>{% endif %}
+      </nav>
+      <div class="cta-box">
+        <h3>想有人帶著下第一盤棋？</h3>
+        <p>入門講座由講師帶你從頭下完一盤完整的棋，零基礎也能參加。</p>
+        {% include btn.html lang="zh" key="beginner" class="btn btn-primary" fallback="/#events" text="報名入門講座" %}
+      </div>
+    </div>
+  </div>
+</article>

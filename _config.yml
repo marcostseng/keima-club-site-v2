@@ -1,0 +1,20 @@
+title: 桂馬會
+url: https://keima.club
+lang: zh-Hant-TW
+
+collections:
+  lessons:
+    output: true
+    permalink: /learn/:name/
+
+defaults:
+  - scope: { type: lessons }
+    values: { layout: lesson, lang: zh }
+  - scope: { path: "" }
+    values: { lang: zh }
+  - scope: { path: "jp" }
+    values: { lang: ja }
+
+exclude:
+  - README.md
+  - preview

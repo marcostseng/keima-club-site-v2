@@ -1,0 +1,32 @@
+{%- assign lang = page.lang | default: "zh" -%}
+{%- if lang == "ja" -%}{%- assign wd = "日,月,火,水,木,金,土" | split: "," -%}{%- else -%}{%- assign wd = "日,一,二,三,四,五,六" | split: "," -%}{%- endif -%}
+{%- if site.data.meetups -%}{%- assign list = site.data.meetups | sort: "date" -%}{%- else -%}{%- assign list = "" | split: "," -%}{%- endif -%}
+<ul class="meetup-list" data-empty-text="{% if lang == 'ja' %}次回の例会は LINE オープンチャットでお知らせします。{% else %}下一場例會時間將在 LINE 社群公告。{% endif %}">
+  {%- for m in list %}
+  {%- assign w = m.date | date: "%w" | plus: 0 %}
+  <li class="meetup" data-date="{{ m.date | date: '%Y-%m-%d' }}">
+    <div class="when">{{ m.date | date: "%-m/%-d" }}（{{ wd[w] }}）<br>{{ m.start }}{% if m.end %}–{{ m.end }}{% endif %}</div>
+    {%- assign dv = site.data.meetup_venue %}
+    {%- if m.venue %}{% assign v = m.venue %}{% assign mp = m.map %}{% else %}{% assign v = dv.venue %}{% assign mp = dv.map %}{% endif %}
+    {%- if m.fee %}{% assign fee = m.fee %}{% else %}{% assign fee = dv.fee %}{% endif %}
+    <div>
+      <h3>{{ v[lang] }}</h3>
+      {%- if fee %}<p>{{ fee[lang] }}</p>{% endif %}
+      {%- if m.note %}<p>{{ m.note[lang] }}</p>{% endif %}
+      {%- if mp %}<p><a href="{{ mp }}" target="_blank" rel="noopener">{% if lang == 'ja' %}地図を開く{% else %}開啟地圖{% endif %}</a></p>{% endif %}
+    </div>
+  </li>
+  {%- endfor %}
+</ul>
+<p class="meetup-empty" hidden></p>
+<script>
+(function(){
+  var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' });
+  var list = document.currentScript.previousElementSibling.previousElementSibling;
+  var empty = list.nextElementSibling, shown = 0;
+  list.querySelectorAll('.meetup').forEach(function(li){
+    if (li.dataset.date < today) li.remove(); else shown++;
+  });
+  if (!shown) { list.hidden = true; empty.textContent = list.dataset.emptyText; empty.hidden = false; }
+})();
+</script>

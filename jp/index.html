@@ -1,0 +1,127 @@
+---
+layout: base
+lang: ja
+ref: home
+full_title: 桂馬会｜台北の日本将棋クラブ／龍馬盃主催
+description: 桂馬会は台北の日本将棋クラブです。例会での対局のほか、日本将棋オープン大会「龍馬盃（Taiwan Shogi Open）」を主催しています。台湾在住の方も、旅行中の方も歓迎します。
+---
+<section class="hero" style="padding:0">
+  <div class="wrap">
+    <div class="hero-text">
+      <div class="hero-kicker">台北の日本将棋クラブ</div>
+      <h1>台北で、<br>将棋を指そう。</h1>
+      <p class="hero-lead">桂馬会は台北の将棋クラブです。毎月の例会で対局を楽しみ、日本将棋オープン大会「龍馬盃」を主催しています。台湾在住の方も、旅行中の方も歓迎します。</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#events">イベントに申し込む</a>
+        <a class="btn btn-ghost" href="#community">交流グループに参加</a>
+      </div>
+    </div>
+    <div class="piece-stage" aria-hidden="true">
+      <div class="piece"><span><b>桂馬</b></span></div>
+      <div class="piece-caption">駒を越えて</div>
+    </div>
+  </div>
+</section>
+
+<section class="events" id="events">
+  <div class="wrap">
+    <div class="sec-head"><h2>イベント</h2></div>
+    <p class="sec-intro">申込ボタンからフォームを開き、送信すれば申込完了です。確認メールをお送りします。</p>
+    <ul class="event-list">
+      <li class="event">
+        <div class="when">例会<br>日程は下記</div>
+        <div><h3>例会（対局会）</h3><p>会員・非会員を問わず参加できます。LINE オープンチャットの例会アナウンスに「+1」と返信すれば申込完了。事前の支払いはありません。</p></div>
+        <a class="btn btn-line" href="#meetups">例会の日程を見る</a>
+      </li>
+      <li class="event">
+        <div class="when">12/19（土）<br>第7回・2026年</div>
+        <div><h3>日本将棋オープン大会（龍馬盃）</h3><p>紀州庵文学森林（予定）。段位の部・級位の部に分かれて開催、参加費NT$500。<a href="/jp/titles/ryuma-2026/">大会要項</a></p></div>
+        {% include btn.html lang="ja" key="ryuma" class="btn btn-line" text="龍馬盃に申し込む" %}
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section id="meetups">
+  <div class="wrap">
+    <div class="sec-head"><h2>例会</h2></div>
+    <div class="meetup-wrap">
+      <div>
+        <h3 class="block-h" style="--accent:var(--kon);margin-top:0">今後の例会</h3>
+        {% include meetups.html %}
+      </div>
+      <div>
+        <h3 class="block-h" style="--accent:var(--kon);margin-top:0">参加方法</h3>
+        <ol class="steps">
+          <li><strong>LINE オープンチャットに参加</strong><br>「桂馬會日本將棋交流群」</li>
+          <li><strong>例会のアナウンスを確認</strong><br>例会の前に、日時と会場をお知らせします（中国語・日本語）</li>
+          <li><strong>アナウンスに「+1」と返信</strong><br>これで申込完了です。事前の支払いはありません</li>
+        </ol>
+        <p class="walkin">初めての方も歓迎です。グループで簡単にごあいさつください。「+1」の返信がなくても参加できますが、盤駒と席は返信した方を優先します。</p>
+        {% include btn.html lang="ja" key="line" class="btn btn-primary" fallback="#community" text="LINE オープンチャットに参加" %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ryuma" id="ryuma">
+  <div class="wrap">
+    <h2>日本将棋オープン大会・龍馬盃</h2>
+    <span class="en">Taiwan Shogi Open</span>
+    <p>龍馬盃は、台湾で開催している日本将棋のオープン大会です。台湾各地の将棋ファンが一堂に会して腕を競います。第7回（2026年）より、桂馬会 日本将棋クラブが主催しています。</p>
+    <p>初めての大会参加の方から腕に覚えのある方まで、棋力に合ったクラスで対局できます。</p>
+    <div class="rule"></div>
+    <div class="hero-actions">
+      {% include btn.html lang="ja" key="ryuma" class="btn btn-primary" text="第7回龍馬盃に申し込む" %}
+      <a class="btn btn-ghost" href="/jp/titles/ryuma-2026/">第7回 大会要項</a>
+    </div>
+  </div>
+</section>
+
+<section id="titles">
+  <div class="wrap">
+    <div class="sec-head"><h2>棋戦</h2></div>
+    <p class="sec-intro">桂馬会がこれまで開催してきた棋戦です。大会形式、歴代優勝者、最新情報をご覧いただけます。</p>
+    {% include title-list.html %}
+  </div>
+</section>
+
+<section id="member">
+  <div class="wrap">
+    <div class="sec-head"><h2>入会のご案内</h2></div>
+    <div class="member-grid">
+      <div>
+        <p>入会金 <b>NT$1,000</b>（一回のみ、<b>年会費なし</b>）。会員専用グループや学習教材のほか、龍馬盃のキャンセル待ちや例会の席で会員を優先します。</p>
+        <p>例会と龍馬盃はどなたでも参加できます。会員でなくても歓迎です。</p>
+        <a class="btn btn-primary" href="/jp/join/">入会方法と特典を見る</a>
+      </div>
+      <div class="member-box">
+        <h3>短期滞在の方へ</h3>
+        <p>出張や旅行で台北にお越しの際も、例会に参加できます。LINE オープンチャットに参加して、例会のアナウンスに「+1」と返信してください。</p>
+        <a class="btn btn-line" href="#meetups">例会の日程を見る</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dojo" id="community">
+  <div class="wrap">
+    <div class="sec-head"><h2>交流グループ</h2></div>
+    <div class="dojo-grid">
+      <div class="contact">
+        <p>桂馬会には現在、常設の道場はありません。LINE オープンチャット「桂馬會日本將棋交流群」が私たちの「バーチャル道場」です。</p>
+        <p>イベントのお知らせ、例会・大会の申込案内、将棋仲間との対局の約束や交流はこちらで行っています。ご質問もお気軽にどうぞ。</p>
+        {% include btn.html lang="ja" key="line" class="btn btn-primary" fallback="#community" text="LINE オープンチャットに参加" %}
+      <div class="line-qr">
+        <img src="/assets/img/line-qr.jpg" alt="LINE「桂馬會日本將棋交流群」QRコード" width="140" height="140">
+        <span>スマホの LINE で読み取って参加</span>
+      </div>
+      </div>
+      <dl>
+        <dt>活動地域</dt><dd>台北</dd>
+        <dt>例会の会場</dt><dd>就諦書屋（台北市大安區浦城街9-12號）<br><span class="addr-note">会場は毎回のお知らせをご確認ください</span></dd>
+        <dt>お知らせ・連絡</dt><dd>LINE オープンチャット</dd>
+      </dl>
+    </div>
+  </div>
+</section>

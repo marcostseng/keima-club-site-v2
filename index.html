@@ -1,0 +1,165 @@
+---
+layout: base
+lang: zh
+ref: home
+full_title: 桂馬會｜台北日本將棋俱樂部・龍馬盃主辦
+description: 桂馬會是台北的日本將棋俱樂部，舉辦例會對局、入門講座，並主辦日本將棋公開賽（龍馬盃 / Taiwan Shogi Open）。歡迎初學者加入。
+---
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SportsClub","name":"桂馬會","alternateName":["Keima Club","桂馬会"],"url":"https://keima.club/","sport":"Shogi",
+"description":"台北的日本將棋俱樂部，主辦日本將棋公開賽（龍馬盃 / Taiwan Shogi Open）。",
+"address":{"@type":"PostalAddress","addressRegion":"台北市","addressCountry":"TW"}}
+</script>
+
+<section class="hero" style="padding:0">
+  <div class="wrap">
+    <div class="hero-text">
+      <div class="hero-kicker">台北・日本將棋俱樂部</div>
+      <h1>在台北，<br>下一盤好棋。</h1>
+      <p class="hero-lead">桂馬會是台北的日本將棋俱樂部。每月例會對局、入門講座，並主辦日本將棋公開賽龍馬盃。第一次接觸將棋也歡迎。</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#events">報名近期活動</a>
+        <a class="btn btn-ghost" href="#start">我是新手</a>
+      </div>
+    </div>
+    <div class="piece-stage" aria-hidden="true">
+      <div class="piece"><span><b>桂馬</b></span></div>
+      <div class="piece-caption">越子而行</div>
+    </div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <div class="sec-head"><h2>從這裡開始</h2><span class="jp">はじめに</span></div>
+    <p class="sec-intro">依照你現在的程度，選一條路走進來。</p>
+    <div class="paths">
+      <div class="path">
+        <div class="who">還不會下</div>
+        <h3>入門講座</h3>
+        <p>先讀十堂線上入門課，認識棋子和規則；想有人帶著下，再來報名入門講座。</p>
+        <a href="/learn/">開始讀入門課</a>
+      </div>
+      <div class="path">
+        <div class="who">已經會下</div>
+        <h3>例會對局</h3>
+        <p>和不同棋力的棋友實戰對局，賽後一起覆盤。是進步最快、也最容易交到棋友的方式。</p>
+        <a href="#meetups">查看例會時間</a>
+      </div>
+      <div class="path">
+        <div class="who">想挑戰比賽</div>
+        <h3>龍馬盃</h3>
+        <p>台灣的日本將棋公開賽，由桂馬會主辦。各級組別都有，適合想檢驗實力的棋友。</p>
+        <a href="/titles/#ryuma">了解龍馬盃</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="events" id="events">
+  <div class="wrap">
+    <div class="sec-head"><h2>活動報名</h2><span class="jp">催し</span></div>
+    <p class="sec-intro">點選報名後會開啟報名表，送出即完成登記，確認信會寄到你的信箱。</p>
+    <ul class="event-list">
+      <li class="event">
+        <div class="when">例會<br>時間見下方</div>
+        <div><h3>例會對局</h3><p>會員與非會員皆可參加。在 LINE 社群的例會公告回覆「+1」即完成報名，不需事先繳費。</p></div>
+        <a class="btn btn-line" href="#meetups">查看例會時間</a>
+      </li>
+      <li class="event">
+        <div class="when">不定期開課<br>日期見報名表</div>
+        <div><h3>入門講座</h3><p>零基礎小班教學，課後直接上手對局。</p></div>
+        {% include btn.html lang="zh" key="beginner" class="btn btn-line" text="報名入門講座" %}
+      </li>
+      <li class="event">
+        <div class="when">12/19（六）<br>第七屆・2026</div>
+        <div><h3>日本將棋公開賽（龍馬盃）</h3><p>紀州庵文學森林（暫定）。段位組、級位組分組比賽，報名費 NT$500。<a href="/titles/ryuma-2026/">比賽章程</a></p></div>
+        {% include btn.html lang="zh" key="ryuma" class="btn btn-line" text="報名龍馬盃" %}
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section id="meetups">
+  <div class="wrap">
+    <div class="sec-head"><h2>例會</h2><span class="jp">例会</span></div>
+    <div class="meetup-wrap">
+      <div>
+        <h3 class="block-h" style="--accent:var(--kon);margin-top:0">近期例會</h3>
+        {% include meetups.html %}
+      </div>
+      <div>
+        <h3 class="block-h" style="--accent:var(--kon);margin-top:0">怎麼報名</h3>
+        <ol class="steps">
+          <li><strong>加入 LINE 社群</strong><br>「桂馬會日本將棋交流群」</li>
+          <li><strong>找到置頂的例會公告</strong><br>每次例會前公布日期與地點</li>
+          <li><strong>在公告下方回覆「+1」</strong><br>就完成報名，不需事先繳費</li>
+        </ol>
+        <p class="walkin">第一次參加也歡迎，可以先在群裡打聲招呼。沒有回覆 +1 也歡迎直接到場，但棋具與座位以回覆 +1 的棋友優先。</p>
+        {% include btn.html lang="zh" key="line" class="btn btn-primary" fallback="#community" text="加入 LINE 社群報名" %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ryuma" id="ryuma">
+  <div class="wrap">
+    <h2>日本將棋公開賽・龍馬盃</h2>
+    <span class="en">Taiwan Shogi Open</span>
+    <p>龍馬盃是台灣每年舉辦的日本將棋公開賽，讓各地棋友在同一個場地交手。自第七屆（2026）起，由桂馬會日本將棋俱樂部主辦。</p>
+    <p>無論是第一次參賽，還是想再往上挑戰的棋友，都能在合適的組別找到對手。</p>
+    <div class="rule"></div>
+    <div class="hero-actions">
+      {% include btn.html lang="zh" key="ryuma" class="btn btn-primary" text="報名第七屆龍馬盃" %}
+      <a class="btn btn-ghost" href="/titles/ryuma-2026/">第七屆比賽章程</a>
+    </div>
+  </div>
+</section>
+
+<section id="titles">
+  <div class="wrap">
+    <div class="sec-head"><h2>棋戰</h2><span class="jp">棋戦</span></div>
+    <p class="sec-intro">桂馬會歷年舉辦的棋戰。點選查看賽制規則、歷屆優勝與最新消息。</p>
+    {% include title-list.html %}
+  </div>
+</section>
+
+<section id="member">
+  <div class="wrap">
+    <div class="sec-head"><h2>加入桂馬會</h2><span class="jp">入会</span></div>
+    <div class="member-grid">
+      <div>
+        <p>入會費 <b>NT$1,000</b>，一次性繳費，<b>無年費</b>。會員可以加入會員專屬社群、取得學習教材，龍馬盃額滿時享有優先遞補，例會滿座時優先入座。</p>
+        <p>例會和龍馬盃都開放所有人參加，不是會員也歡迎。</p>
+        <a class="btn btn-primary" href="/join/">了解入會方式與權益</a>
+      </div>
+      <div class="member-box">
+        <h3>會員教材</h3>
+        <p>教材以共享資料夾提供，僅限會員的登記信箱開啟。請用入會時填寫的 Google 帳號登入。</p>
+        {% include btn.html lang="zh" key="materials" class="btn btn-line" fallback="#member" text="開啟會員教材" %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dojo" id="community">
+  <div class="wrap">
+    <div class="sec-head"><h2>加入交流群</h2><span class="jp">仮想道場</span></div>
+    <div class="dojo-grid">
+      <div class="contact">
+        <p>桂馬會目前沒有實體道場，我們的「虛擬道場」在 LINE 社群。</p>
+        <p>活動公告、例會與比賽報名資訊、棋友約棋與交流都在這裡，有任何問題也歡迎直接在群裡發問。</p>
+        {% include btn.html lang="zh" key="line" class="btn btn-primary" fallback="#community" text="加入 LINE 社群" %}
+      <div class="line-qr">
+        <img src="/assets/img/line-qr.jpg" alt="LINE 社群「桂馬會日本將棋交流群」QR Code" width="140" height="140">
+        <span>用手機 LINE 掃描加入</span>
+      </div>
+      </div>
+      <dl>
+        <dt>活動地區</dt><dd>台北</dd>
+        <dt>例會地點</dt><dd>就諦書屋（台北市大安區浦城街9-12號）<br><span class="addr-note">實際地點以每次公告為準</span></dd>
+        <dt>公告與聯絡</dt><dd>LINE 社群「桂馬會日本將棋交流群」</dd>
+      </dl>
+    </div>
+  </div>
+</section>

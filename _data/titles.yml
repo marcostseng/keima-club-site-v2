@@ -1,0 +1,78 @@
+# 棋戰資料：中日文頁面共用。新增優勝者時，在 results 最上面加一行。
+- id: ryuma
+  name: { zh: 龍馬盃, ja: 龍馬盃 }
+  sub: { zh: 日本將棋公開賽　Taiwan Shogi Open, ja: 日本将棋オープン大会　Taiwan Shogi Open }
+  active: true
+  accent: murasaki
+  intro:
+    zh: 台灣每年舉辦的日本將棋公開賽。自第七屆（2026）起，由桂馬會日本將棋俱樂部主辦。
+    ja: 台湾で開催している日本将棋のオープン大会です。第7回（2026年）より、桂馬会 日本将棋クラブが主催しています。
+  news:
+    zh: [{ date: "2026/10", text: 第七屆比賽章程（草案）公布：2026 年 12 月 19 日（六）於紀州庵文學森林（暫定）舉行，段位組、級位組分組比賽。 }]
+    ja: [{ date: "2026/10", text: 第7回の大会要項（草案）を公開しました。2026年12月19日（土）、紀州庵文学森林（予定）にて、段位の部・級位の部に分かれて開催します。 }]
+  rules:
+    zh: 分段位組、級位組，兩組不混合對局。上午預選 3 輪（2 勝晉級、2 敗淘汰），下午單淘汰。報名費 NT$500，每組 32 人。段位組冠軍授予「龍馬」頭銜。詳細規定請見比賽章程。
+    ja: 段位の部と級位の部に分かれ、両部門の対局はありません。午前は予選3局（2勝で通過、2敗で敗退）、午後はトーナメント。参加費NT$500、各部門32名まで。段位の部の優勝者に「龍馬」の称号を授与します。詳細は大会要項をご覧ください。
+  doc:
+    url: { zh: /titles/ryuma-2026/, ja: /jp/titles/ryuma-2026/ }
+    label: { zh: 查看第七屆比賽章程, ja: 第7回 大会要項を見る }
+  signup: { zh: 報名第七屆龍馬盃, ja: 第7回龍馬盃に申し込む }
+  results:
+    - { year: "2026", ed: 7, upcoming: true }
+    - { year: "2024", ed: 6, winner: 王柏勛 }
+    - { year: "2023", cancelled: true }
+    - { year: "2022", ed: 5, winner: 王翊安 }
+    - { year: "2021", cancelled: true }
+    - { year: "2020", ed: 4, winner: 劉又寧 }
+    - { year: "2019", ed: 3, winner: 廖昱誠 }
+    - { year: "2018", ed: 2, winner: 王君皓 }
+    - { year: "2017", ed: 1, winner: 廖昱誠 }
+
+- id: meijin
+  name: { zh: 名人戰, ja: 名人戦 }
+  sub: { zh: 桂馬會順位戰, ja: 桂馬会順位戦 }
+  active: false
+  accent: kon
+  intro:
+    zh: 以順位戰決定名人的會內棋戰。目前暫停舉辦，恢復時將在此公告。
+    ja: 順位戦で名人を決めるクラブ内の棋戦です。現在は休止中で、再開の際はこちらでお知らせします。
+  news:
+    zh: [{ date: "—", text: 目前暫停舉辦。 }]
+    ja: [{ date: "—", text: 現在休止中です。 }]
+  rules:
+    zh: 2021–22 年採 A、B 兩組制：A 組優勝者獲得名人稱號，B 組優勝者晉級 A 組。2024 年以桂馬會順位戰形式舉行。
+    ja: 2021〜22年はA・Bの2クラス制で、Aクラス優勝者が名人、Bクラス優勝者がAクラスへ昇級しました。2024年は桂馬会順位戦として開催しました。
+  results:
+    - year: "2024"
+      label: { zh: 順位戰, ja: 順位戦 }
+      winners:
+        - { name: 謝建霖, note: { zh: 優勝, ja: 優勝 } }
+        - { name: 劉又寧, note: { zh: 準優勝, ja: 準優勝 } }
+    - year: "2021–22"
+      label: { zh: A 組, ja: Aクラス }
+      winners:
+        - { name: 劉嘉裕, note: { zh: 名人, ja: 名人 } }
+    - year: ""
+      label: { zh: B 組, ja: Bクラス }
+      winners:
+        - { name: 張朽, note: { zh: 晉級 A 組, ja: Aクラス昇級 } }
+  latest: { zh: 謝建霖（2024）, ja: 謝建霖（2024年） }
+
+- id: ousho
+  name: { zh: 王將盃, ja: 王将盃 }
+  sub: { zh: 四季賽, ja: 四季戦 }
+  active: false
+  accent: enji
+  intro:
+    zh: 一年分春、夏、秋、冬四季舉行的季賽。目前暫停舉辦，恢復時將在此公告。
+    ja: 春・夏・秋・冬の年4回開催していた季節戦です。現在は休止中で、再開の際はこちらでお知らせします。
+  news:
+    zh: [{ date: "—", text: 目前暫停舉辦。 }]
+    ja: [{ date: "—", text: 現在休止中です。 }]
+  rules:
+    zh: 每年春、夏、秋、冬各舉行一次，每季產生一位優勝者。
+    ja: 春・夏・秋・冬の各季に1回ずつ開催し、季節ごとに優勝者を決めます。
+  seasons:
+    - { year: "2020", spring: 張京鼎, summer: 劉又寧, autumn: 陳黎宇, winter: 張京鼎 }
+    - { year: "2019", spring: 李豈翔, summer: 李豈翔, autumn: 李豈翔, winter: 劉又寧 }
+  latest: { zh: 張京鼎（2020 冬）, ja: 張京鼎（2020年冬） }

@@ -1,0 +1,67 @@
+{%- assign lang = page.lang | default: "zh" -%}
+{%- assign t = site.data.i18n[lang] -%}
+{%- for ti in site.data.titles %}
+<section class="title-sec{% cycle '', ' alt' %}" id="{{ ti.id }}" style="--accent:var(--{{ ti.accent }})">
+  <div class="wrap">
+    <div class="title-head">
+      <h2>{{ ti.name[lang] }}</h2>
+      {% if ti.active %}<span class="status on">{{ t.status_on }}</span>{% else %}<span class="status off">{{ t.status_off }}</span>{% endif %}
+    </div>
+    <p class="title-sub">{{ ti.sub[lang] }}</p>
+    <div class="title-grid">
+      <div>
+        <p class="lead">{{ ti.intro[lang] }}</p>
+        <h3 class="block-h">{{ t.news }}</h3>
+        <ul class="news">
+          {%- for n in ti.news[lang] %}
+          <li><time>{{ n.date }}</time><span>{{ n.text }}</span></li>
+          {%- endfor %}
+        </ul>
+        <details class="rules">
+          <summary>{{ t.rules }}</summary>
+          <div><p>{{ ti.rules[lang] }}</p></div>
+        </details>
+        {%- if ti.doc %}
+        <p><a class="btn btn-line" href="{{ ti.doc.url[lang] }}">{{ ti.doc.label[lang] }}</a></p>
+        {%- endif %}
+        {%- if ti.signup %}
+        {%- assign signup_text = ti.signup[lang] %}
+        {% include btn.html lang=lang key="ryuma" class="btn btn-primary" fallback=t.home text=signup_text %}
+        {%- endif %}
+      </div>
+      <div>
+        <h3 class="block-h">{{ t.honors }}</h3>
+        {%- if ti.seasons %}
+        <div class="seasons">
+          {%- for s in ti.seasons %}
+          <div class="season-year">
+            <div class="yr">{{ s.year }}</div>
+            <dl>
+              <div><dt>春</dt><dd>{{ s.spring }}</dd></div>
+              <div><dt>夏</dt><dd>{{ s.summer }}</dd></div>
+              <div><dt>秋</dt><dd>{{ s.autumn }}</dd></div>
+              <div><dt>冬</dt><dd>{{ s.winter }}</dd></div>
+            </dl>
+          </div>
+          {%- endfor %}
+        </div>
+        {%- else %}
+        <ol class="honors">
+          {%- for r in ti.results %}
+          {%- if r.upcoming %}
+          <li class="upcoming"><span class="yr">{{ r.year }}</span><span class="ed">{{ t.edition_prefix }}{{ r.ed }}{{ t.edition_suffix }}</span><span class="who">{{ t.upcoming }}</span></li>
+          {%- elsif r.cancelled %}
+          <li class="cancel"><span class="yr">{{ r.year }}</span><span class="ed"></span><span class="who">{{ t.cancelled }}</span></li>
+          {%- elsif r.winners %}
+          <li><span class="yr">{{ r.year }}</span><span class="ed">{{ r.label[lang] }}</span><span class="who">{% for w in r.winners %}{{ w.name }}<small>{{ w.note[lang] }}</small>{% unless forloop.last %}　{% endunless %}{% endfor %}</span></li>
+          {%- else %}
+          <li><span class="yr">{{ r.year }}</span><span class="ed">{{ t.edition_prefix }}{{ r.ed }}{{ t.edition_suffix }}</span><span class="who">{{ r.winner }}</span></li>
+          {%- endif %}
+          {%- endfor %}
+        </ol>
+        {%- endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{%- endfor %}

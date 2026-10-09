@@ -1,0 +1,6 @@
+{%- assign u = site.data.links[include.lang][include.key] -%}
+{%- if u and u != "" -%}
+<a class="{{ include.class }}" href="{{ u }}" target="_blank" rel="noopener">{{ include.text }}</a>
+{%- else -%}
+<a class="{{ include.class }}" href="{{ include.fallback | default: '#events' }}">{{ include.text }}</a>
+{%- endif -%}

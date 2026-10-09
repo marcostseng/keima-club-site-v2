@@ -1,0 +1,54 @@
+# 介面文字（選單、按鈕、標籤）
+zh:
+  html_lang: zh-Hant-TW
+  hreflang: zh-Hant
+  name: 桂馬會
+  home: /
+  fonts: "family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700"
+  nav:
+    - { label: 入門, url: /learn/ }
+    - { label: 例會, url: /#meetups }
+    - { label: 活動報名, url: /#events }
+    - { label: 棋戰, url: /titles/ }
+    - { label: 入會, url: /join/ }
+    - { label: 交流群, url: /#community }
+  switch_label: 中文
+  footer_note: 台北・日本將棋俱樂部
+  status_on: 舉辦中
+  status_off: 暫停中
+  upcoming: 即將舉行
+  cancelled: 停辦
+  honors: 歷屆優勝
+  news: 最新消息
+  rules: 賽制與規則
+  latest: 前屆優勝
+  edition_prefix: 第
+  edition_suffix: 屆
+  site_suffix: 桂馬會
+  year_suffix: ""
+
+ja:
+  html_lang: ja
+  hreflang: ja
+  name: 桂馬会
+  home: /jp/
+  fonts: "family=Noto+Serif+JP:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700"
+  nav:
+    - { label: イベント, url: /jp/#events }
+    - { label: 棋戦, url: /jp/titles/ }
+    - { label: 入会, url: /jp/join/ }
+    - { label: 交流グループ, url: /jp/#community }
+  switch_label: 日本語
+  footer_note: 台北の日本将棋クラブ
+  status_on: 開催中
+  status_off: 休止中
+  upcoming: 開催予定
+  cancelled: 中止
+  honors: 歴代優勝者
+  news: 最新情報
+  rules: 大会形式・ルール
+  latest: 前回優勝
+  edition_prefix: 第
+  edition_suffix: 回
+  site_suffix: 桂馬会
+  year_suffix: 年

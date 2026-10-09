@@ -1,0 +1,9 @@
+{%- assign lang = page.lang | default: "zh" -%}
+{%- assign t = site.data.i18n[lang] -%}
+{%- if lang == "ja" %}{% assign base = "/jp/titles/" %}{% else %}{% assign base = "/titles/" %}{% endif -%}
+<ul class="title-list">
+  {%- for ti in site.data.titles %}
+  {%- if ti.latest %}{% assign last = ti.latest[lang] %}{% else %}{% assign r = ti.results | where_exp: "x", "x.winner" | first %}{% assign last = r.winner | append: "（" | append: r.year | append: t.year_suffix | append: "）" %}{% endif %}
+  <li><a href="{{ base }}#{{ ti.id }}"><span class="t">{{ ti.name[lang] }}</span>{% if ti.active %}<span class="status on">{{ t.status_on }}</span>{% else %}<span class="status off">{{ t.status_off }}</span>{% endif %}<span class="last">{{ t.latest }}　{{ last }}</span></a></li>
+  {%- endfor %}
+</ul>
