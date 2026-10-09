@@ -60,10 +60,34 @@
 <main id="top">
 {{ content }}
 </main>
+<script>
+// 表格：外層加可捲動容器；兩欄表格在手機上改成上下排列
+document.querySelectorAll('.prose table').forEach(function (t) {
+  var w = document.createElement('div'); w.className = 'table-scroll';
+  t.parentNode.insertBefore(w, t); w.appendChild(t);
+  var r = t.rows[0]; if (r && r.cells.length === 2) t.classList.add('stack');
+});
+</script>
 <footer class="site-foot">
+  <div class="wrap foot-main">
+    <div class="foot-brand">
+      <a class="brand" href="{{ t.home }}"><span class="mini-piece" aria-hidden="true"></span>{{ t.name }}</a>
+      <p>{{ t.footer_note }}</p>
+    </div>
+    <nav class="foot-nav" aria-label="Footer">
+      {%- if lang == "ja" %}
+      <div><span class="foot-h">イベント</span><a href="/jp/#meetups">例会</a><a href="/jp/titles/">棋戦・龍馬盃</a></div>
+      <div><span class="foot-h">参加する</span><a href="/jp/join/">入会</a><a href="/jp/#community">交流グループ</a></div>
+      <div><span class="foot-h">中国語で読む</span><a href="/learn/">将棋入門講座</a><a href="/articles/">コラム</a></div>
+      {%- else %}
+      <div><span class="foot-h">學習</span><a href="/learn/">將棋入門</a><a href="/articles/">專欄</a></div>
+      <div><span class="foot-h">活動</span><a href="/#meetups">例會</a><a href="/titles/">棋戰・龍馬盃</a></div>
+      <div><span class="foot-h">加入</span><a href="/join/">入會</a><a href="/#community">LINE 交流群</a></div>
+      {%- endif %}
+    </nav>
+  </div>
   <div class="wrap">
-    <span>© 2026 {{ t.name }} Keima Club</span>
-    <span>{{ t.footer_note }}</span>
+    <div class="foot-bottom">© 2026 {{ t.name }} Keima Club</div>
   </div>
 </footer>
 </body>

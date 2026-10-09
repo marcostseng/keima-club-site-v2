@@ -1,0 +1,32 @@
+---
+layout: base
+lang: zh
+title: 專欄
+description: 桂馬會的將棋專欄：將棋動漫、規則、術語與戰術的延伸閱讀。
+permalink: /articles/
+---
+{%- assign arts = site.pages | where: "article", true | sort: "date" | reverse -%}
+<section class="hero learn-hero" style="padding:0">
+  <div class="wrap" style="max-width:860px"><div>
+    <div class="hero-kicker">專欄</div>
+    <h1>將棋延伸閱讀</h1>
+    <p class="hero-lead">入門課程之外的將棋大小事：動漫作品、規則整理、術語與戰術。</p>
+  </div></div>
+</section>
+<section class="article">
+  <div class="wrap" style="max-width:860px">
+    <ol class="lesson-list">
+      {%- for a in arts %}
+      <li><a href="{{ a.url }}">
+        <span class="no">{{ a.date | date: "%Y/%m" }}</span>
+        <span><span class="t">{{ a.title }}</span><span class="d">{{ a.description }}</span></span>
+      </a></li>
+      {%- endfor %}
+    </ol>
+    <div class="cta-box">
+      <h2>從零開始學將棋</h2>
+      <p>十堂線上入門課，用故事帶你認識棋子、規則，一直到下完一盤棋。</p>
+      <a class="btn btn-primary" href="/learn/">開始讀入門課</a>
+    </div>
+  </div>
+</section>

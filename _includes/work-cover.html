@@ -1,0 +1,8 @@
+{%- comment -%}
+作品封面：把圖檔放在 assets/img/works/ 並使用 include 裡指定的檔名，就會自動顯示；沒有圖檔時不顯示任何東西。
+{%- endcomment -%}
+{%- assign cover_path = "/assets/img/works/" | append: include.img -%}
+{%- assign cover_file = site.static_files | where: "path", cover_path | first -%}
+{%- if cover_file -%}
+<figure class="work-cover"><img src="{{ cover_path | relative_url }}" alt="{{ include.alt }}" loading="lazy"><figcaption>{{ include.alt }}</figcaption></figure>
+{%- endif -%}

@@ -35,3 +35,13 @@
 - Cloudflare Web Analytics：在 `_layouts/base.html` 取消註解並填 token
 - 上線後到 Google Search Console 新增網站並提交
 - 本檔不會出現在網站上
+
+## 舊網站網址轉址
+- 舊 WordPress 網址的轉址放在 `_redirects/`，一個檔案對應一個舊網址（檔案裡的 permalink 是舊網址、redirect_to 是新網址）
+- 重寫舊文章時：在新文章的開頭加上 `permalink: /舊網址/`，並刪除 `_redirects/` 裡對應的檔案
+- 不在清單裡的舊網址（例如 /product/、/category/、/courses/ 開頭）由 404.html 自動導向
+
+## 專欄文章的作品封面
+把封面圖放進 `assets/img/works/`，檔名對應如下就會自動顯示（沒有圖就不顯示）：
+3gatsu-no-lion.jpg、ryuoh-no-oshigoto.jpg、soredemo-ayumu.jpg、shion-no-ou.jpg、gekka-no-kishi.jpg、81diver.jpg、
+3gatsu-no-lion-movie.jpg、satoshi-no-seishun.jpg、nakimushi-shottan.jpg、banjo-no-himawari.jpg、81diver-drama.jpg

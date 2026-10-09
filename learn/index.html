@@ -26,6 +26,13 @@ permalink: /learn/
       </a></li>
       {% endfor %}
     </ol>
+    {%- assign arts = site.pages | where: "article", true | sort: "date" | reverse %}
+    {%- if arts.size > 0 %}
+    <h2 class="block-h" style="--accent:var(--kon);margin-top:48px">延伸閱讀</h2>
+    <ul class="news">
+      {%- for a in arts %}<li><time>{{ a.date | date: "%Y/%m" }}</time><span><a href="{{ a.url }}">{{ a.title }}</a></span></li>{% endfor %}
+    </ul>
+    {%- endif %}
     <div class="cta-box">
       <h2>讀完了，想實際下一盤？</h2>
       <p>歡迎來入門講座或例會，現場備有棋具，有棋友陪你下。</p>

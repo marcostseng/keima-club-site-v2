@@ -6,10 +6,14 @@ collections:
   lessons:
     output: true
     permalink: /learn/:name/
+  redirects:            # 舊網站網址轉址（_redirects 資料夾，一個檔案一個網址）
+    output: true
 
 defaults:
   - scope: { type: lessons }
     values: { layout: lesson, lang: zh }
+  - scope: { type: redirects }
+    values: { layout: redirect }
   - scope: { path: "" }
     values: { lang: zh }
   - scope: { path: "jp" }

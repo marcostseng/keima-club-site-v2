@@ -1,0 +1,69 @@
+---
+layout: null
+sitemap: false
+---
+# 桂馬會日本將棋俱樂部（Keima Club）
+
+> 桂馬會是台灣台北的日本將棋（Shogi）俱樂部，舉辦例會對局與入門講座，提供免費線上入門課程，並主辦台灣的日本將棋公開賽「龍馬盃」（Taiwan Shogi Open）。網站提供中文與日文版本。日文名稱：桂馬会 日本将棋クラブ。
+
+## 基本資訊
+
+- 名稱：桂馬會日本將棋俱樂部（英文 Keima Club，日文 桂馬会）
+- 所在地：台灣台北
+- 目前沒有實體道場；交流、公告與聯絡都在 LINE 社群「桂馬會日本將棋交流群」：{{ site.data.links.zh.line }}
+- 官方網站：{{ "/" | absolute_url }}（日文版：{{ "/jp/" | absolute_url }}）
+
+## 例會（定期對局聚會）
+
+- 地點：主要在{{ site.data.meetup_venue.venue.zh }}，實際以每次公告為準
+- 費用：{{ site.data.meetup_venue.fee.zh }}
+- 報名方式：加入 LINE 社群，在例會公告下方回覆「+1」；不需事先繳費
+- 會員與非會員皆可參加，初學者也歡迎
+- 近期時間表：{{ "/#meetups" | absolute_url }}
+
+## 日本將棋公開賽・龍馬盃（Taiwan Shogi Open）
+
+- 台灣的日本將棋公開賽，自第七屆（2026）起由桂馬會日本將棋俱樂部主辦
+- 第七屆：2026 年 12 月 19 日（星期六），紀州庵文學森林（暫定），分段位組、級位組
+- 報名費每人 NT$500，每組 32 人，報名截止 2026 年 12 月 12 日
+- 段位組冠軍授予「龍馬」頭銜
+- [第七屆比賽章程（中文）]({{ "/titles/ryuma-2026/" | absolute_url }})
+- [第7回 大会要項（日本語）]({{ "/jp/titles/ryuma-2026/" | absolute_url }})
+
+## 棋戰與歷屆優勝
+
+{% for ti in site.data.titles -%}
+### {{ ti.name.zh }}（{% if ti.active %}舉辦中{% else %}暫停中{% endif %}）
+{% if ti.seasons -%}
+{% for s in ti.seasons %}- {{ s.year }}：春 {{ s.spring }}、夏 {{ s.summer }}、秋 {{ s.autumn }}、冬 {{ s.winter }}
+{% endfor -%}
+{% else -%}
+{% for r in ti.results -%}
+{% if r.upcoming %}- {{ r.year }}：第{{ r.ed }}屆，即將舉行
+{% elsif r.cancelled %}- {{ r.year }}：停辦
+{% elsif r.winners %}{% if r.year != '' %}{% assign yr = r.year %}{% endif %}- {{ yr }} {{ r.label.zh }}：{% for w in r.winners %}{{ w.name }}（{{ w.note.zh }}）{% unless forloop.last %}、{% endunless %}{% endfor %}
+{% else %}- {{ r.year }}：第{{ r.ed }}屆優勝 {{ r.winner }}
+{% endif -%}
+{% endfor -%}
+{% endif %}
+{% endfor -%}
+完整紀錄：{{ "/titles/" | absolute_url }}
+
+## 將棋入門課程（免費線上，中文）
+
+十堂課，從認識棋盤棋子到終盤，以「軍師指揮軍隊」的故事帶領初學者理解規則：{{ "/learn/" | absolute_url }}
+
+{% assign ls = site.lessons | sort: "order" -%}
+{% for l in ls %}- [第 {{ l.order }} 課：{{ l.title }}]({{ l.url | absolute_url }})：{{ l.description }}
+{% endfor %}
+## 專欄文章
+
+{% assign arts = site.pages | where: "article", true | sort: "date" | reverse -%}
+{% for a in arts %}- [{{ a.title }}]({{ a.url | absolute_url }})：{{ a.description }}
+{% endfor %}
+## 入會
+
+- 入會費 NT$1,000（一次性，無年費）
+- 會員權益：會員專屬 LINE 社群與學習教材、龍馬盃額滿時優先遞補、例會滿座時優先入座
+- 例會與龍馬盃皆開放非會員參加
+- 詳情：{{ "/join/" | absolute_url }}

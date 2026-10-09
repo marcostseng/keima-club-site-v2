@@ -7,10 +7,16 @@ layout: base
       {% if page.crumb %}<div class="crumb"><a href="{{ page.crumb_url }}">{{ page.crumb }}</a></div>{% endif %}
       {% if page.badge %}<span class="status on" style="margin-bottom:14px">{{ page.badge }}</span>{% endif %}
       <h1>{{ page.title }}</h1>
+      {%- if page.article and page.date %}<div class="crumb" style="margin:-4px 0 10px">{{ page.date | date: "%Y/%m/%d" }}・桂馬會</div>{% endif %}
       <p class="hero-lead">{{ page.description }}</p>
     </div>
   </div>
 </section>
+{%- if page.article %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | jsonify }},"datePublished":"{{ page.date | date: '%Y-%m-%d' }}","inLanguage":"zh-Hant-TW","mainEntityOfPage":"{{ page.url | absolute_url }}","author":{"@type":"Organization","name":"桂馬會日本將棋俱樂部","url":"https://keima.club/"},"publisher":{"@type":"Organization","name":"桂馬會日本將棋俱樂部"}}
+</script>
+{%- endif %}
 <article class="article">
   <div class="wrap">
     <div class="prose">
