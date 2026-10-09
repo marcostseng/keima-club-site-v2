@@ -29,6 +29,14 @@
 <meta property="og:url" content="{{ page.url | absolute_url }}">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#1E2A4A">
+<meta property="og:image" content="{{ '/assets/img/brand/og-image.png' | absolute_url }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="{{ t.name }}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/img/brand/keima-mark-bengara.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?{{ t.fonts }}&display=swap" rel="stylesheet">
@@ -40,7 +48,7 @@
 <body>
 <header class="site-head">
   <div class="wrap">
-    <a class="brand" href="{{ t.home }}"><span class="mini-piece" aria-hidden="true"></span>{{ t.name }}</a>
+    <a class="brand" href="{{ t.home }}"><img src="/assets/img/brand/keima-logo-washi.svg" alt="{{ t.name }}" width="120" height="42"></a>
     <div class="head-right">
       <nav class="nav" aria-label="Menu">
         {%- for n in t.nav %}
@@ -71,7 +79,7 @@ document.querySelectorAll('.prose table').forEach(function (t) {
 <footer class="site-foot">
   <div class="wrap foot-main">
     <div class="foot-brand">
-      <a class="brand" href="{{ t.home }}"><span class="mini-piece" aria-hidden="true"></span>{{ t.name }}</a>
+      <a class="brand" href="{{ t.home }}"><img src="/assets/img/brand/keima-logo-washi.svg" alt="{{ t.name }}" width="140" height="49"></a>
       <p>{{ t.footer_note }}</p>
     </div>
     <nav class="foot-nav" aria-label="Footer">

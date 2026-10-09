@@ -1,8 +1,8 @@
 :root{
   --kon:#1E2A4A;        /* 紺：主色、深底 */
   --kon-deep:#141D35;
-  --enji:#8E2B2F;       /* 臙脂：行動按鈕 */
-  --enji-dark:#74222A;
+  --enji:#A3320B;       /* 弁柄：LOGO 主色，行動按鈕 */
+  --enji-dark:#7E2608;
   --koge:#5A3B2A;       /* 焦茶：文字、木 */
   --murasaki:#4E3766;   /* 江戶紫：龍馬盃 */
   --kin:#B08D45;        /* 金：細線、點綴 */
@@ -364,3 +364,8 @@ html[lang="ja"]{--serif:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif
 @media (max-width:760px){.foot-main{grid-template-columns:1fr;gap:28px;padding-top:36px}.foot-nav{gap:16px}}
 
 .prose .video{clear:both;margin:1.2em 0 1.8em}
+
+/* LOGO */
+.brand img{display:block;height:40px;width:auto}
+.foot-brand .brand img{height:46px}
+@media (max-width:520px){.brand img{height:34px}}
