@@ -32,6 +32,7 @@
 並分別設定 `lang: zh` / `lang: ja`，語言切換按鈕會自動對應。
 
 ## 其他
+- Google Analytics 4：把評估 ID（G- 開頭）填進 `_config.yml` 的 `ga4_id`
 - Cloudflare Web Analytics：在 `_layouts/base.html` 取消註解並填 token
 - 上線後到 Google Search Console 新增網站並提交
 - 本檔不會出現在網站上

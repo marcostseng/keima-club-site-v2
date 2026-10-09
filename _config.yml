@@ -2,6 +2,9 @@ title: 桂馬會
 url: https://keima.club
 lang: zh-Hant-TW
 
+# Google Analytics 4 評估 ID（例如 G-ABC123XYZ）；留空則不載入
+ga4_id: "G-HMV767MSTQ"
+
 collections:
   lessons:
     output: true
