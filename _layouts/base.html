@@ -48,6 +48,16 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '{{ site.ga4_id }}');
+// 轉換追蹤：點擊報名表、加入 LINE 群
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a'); if (!a) return;
+  var href = a.href || '', label = (a.textContent || '').trim().slice(0, 60);
+  if (href.indexOf('docs.google.com/forms') >= 0) {
+    gtag('event', 'registration_click', { form_name: label, page_path: location.pathname });
+  } else if (href.indexOf('line.me/') >= 0) {
+    gtag('event', 'join_line_click', { link_text: label, page_path: location.pathname });
+  }
+});
 </script>
 {%- endif %}
 <!-- 流量分析：取得 token 後取消註解
