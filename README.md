@@ -44,4 +44,4 @@
 ## 專欄文章的作品封面
 把封面圖放進 `assets/img/works/`，檔名對應如下就會自動顯示（沒有圖就不顯示）：
 3gatsu-no-lion.jpg、ryuoh-no-oshigoto.jpg、soredemo-ayumu.jpg、shion-no-ou.jpg、gekka-no-kishi.jpg、81diver.jpg、
-3gatsu-no-lion-movie.jpg、satoshi-no-seishun.jpg、nakimushi-shottan.jpg、banjo-no-himawari.jpg、81diver-drama.jpg
+3gatsu-no-lion-movie.jpg、satoshi-no-seishun.jpg（怪童：聖）、nakimushi-shottan.jpg、banjo-no-himawari.jpg、81diver-drama.jpg
