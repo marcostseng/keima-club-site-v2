@@ -19,6 +19,7 @@
   signup: { zh: 報名第七屆龍馬盃, ja: 第7回龍馬盃に申し込む }
   results:
     - { year: "2026", ed: 7, upcoming: true }
+    - { year: "2025", cancelled: true }
     - { year: "2024", ed: 6, winner: 王柏勛 }
     - { year: "2023", cancelled: true }
     - { year: "2022", ed: 5, winner: 王翊安 }
