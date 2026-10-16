@@ -1,0 +1,3 @@
+{%- assign u = "/strategies/" | append: include.s | append: "/" -%}
+{%- assign d = site.strategies | where: "url", u | first -%}
+{%- if d -%}<a href="{{ d.url }}">{{ d.title }}</a>{% if d.ja and d.ja != d.title %}<small>{{ d.ja }}</small>{% endif %}{%- else -%}{{ include.s }}{%- endif -%}

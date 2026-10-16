@@ -1,0 +1,34 @@
+---
+layout: base
+lang: zh
+title: 棋士名鑑：桂馬會棋友與歷屆優勝
+description: 桂馬會棋士名鑑：參加例會與棋戰的棋友資料、段級位、對局紀錄與歷屆優勝，資料經本人同意刊登。
+permalink: /players/
+---
+{%- assign players = site.players | sort: "title" -%}
+<section class="hero page-hero" style="padding:0">
+  <div class="wrap"><div>
+    {% include db-crumb.html %}
+    <div class="hero-kicker">棋士名鑑</div>
+    <h1>棋士名鑑</h1>
+    <p class="hero-lead">參加桂馬會例會與棋戰的棋友。每位棋士的頁面都會列出對局紀錄與優勝紀錄。</p>
+  </div></div>
+</section>
+<section class="db-body">
+  <div class="wrap">
+    {%- if players.size > 0 %}
+    <div class="db-people">
+      {%- for p in players %}
+      <a href="{{ p.url }}"><span class="av" aria-hidden="true">{{ p.title | slice: 0 }}</span><span><span class="nm">{{ p.title }}</span><span class="rk">{{ p.rank }}</span></span></a>
+      {%- endfor %}
+    </div>
+    {%- else %}
+    <p class="db-empty">棋士名鑑準備中。</p>
+    {%- endif %}
+    <div class="cta-box">
+      <h2>登錄棋士名鑑</h2>
+      <p>參加過桂馬會例會或棋戰的棋友都可以登錄。請來信告訴我們想公開的名稱與段級位，資料經本人同意後刊登。</p>
+      <a class="btn btn-primary" href="mailto:admin@keima.club?subject=%E7%99%BB%E9%8C%84%E6%A3%8B%E5%A3%AB%E5%90%8D%E9%91%91">來信登錄</a>
+    </div>
+  </div>
+</section>

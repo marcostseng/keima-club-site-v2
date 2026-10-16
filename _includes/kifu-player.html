@@ -1,0 +1,8 @@
+{%- comment -%}
+棋譜播放器。參數：src（KIF 檔路徑，必填）、start（first／last，預設 first）、compact（true 時只顯示棋盤）、sente、gote（對局者名稱）
+用法：{% include kifu-player.html src="/assets/kifu/games/xxx.kif" %}
+{%- endcomment -%}
+<div class="kifu{% if include.compact %} compact{% endif %}" data-kifu="{{ include.src }}" data-start="{{ include.start | default: 'first' }}"{% if include.compact %} data-compact{% endif %}{% if include.sente %} data-sente="{{ include.sente | escape }}"{% endif %}{% if include.gote %} data-gote="{{ include.gote | escape }}"{% endif %}>
+  <p class="kifu-fallback db-note">棋譜載入中…（無法顯示時請<a href="{{ include.src }}" download>下載 KIF 檔</a>）</p>
+</div>
+<script src="/assets/js/kifu.js?v={{ site.time | date: '%Y%m%d%H%M%S' }}" defer></script>

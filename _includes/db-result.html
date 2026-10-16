@@ -1,0 +1,2 @@
+{%- assign g = include.g -%}
+{%- if g.result == "sente" -%}▲勝{%- elsif g.result == "gote" -%}△勝{%- elsif g.result -%}{{ g.result }}{%- else -%}—{%- endif -%}

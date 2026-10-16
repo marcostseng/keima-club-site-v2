@@ -7,6 +7,7 @@ zh:
   fonts: "family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700"
   nav:
     - { label: 入門, url: /learn/ }
+    - { label: 資料庫, url: /db/ }
     - { label: 例會, url: /#meetups }
     - { label: 活動報名, url: /#events }
     - { label: 棋戰, url: /titles/ }

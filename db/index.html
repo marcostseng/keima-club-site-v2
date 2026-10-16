@@ -1,0 +1,80 @@
+---
+layout: base
+lang: zh
+title: 將棋資料庫：戰法圖鑑・棋譜・棋士名鑑
+description: 桂馬會的將棋資料庫：查詢戰法圖鑑、線上逐手播放的對局棋譜，以及棋士名鑑與歷屆優勝紀錄。
+permalink: /db/
+---
+{%- assign cats = site.data.strategy_categories -%}
+{%- assign games = site.games | sort: "date" | reverse -%}
+{%- assign players = site.players | sort: "title" -%}
+<section class="hero page-hero" style="padding:0">
+  <div class="wrap"><div>
+    <div class="hero-kicker">将棋データベース</div>
+    <h1>將棋資料庫</h1>
+    <p class="hero-lead">查詢戰法、對局棋譜與棋士資料。棋譜都能在線上逐手播放，戰法、棋譜、棋士之間互相連結。</p>
+    <div style="margin-top:32px">
+      <label class="db-search-lb" for="db-q">搜尋戰法、棋譜、棋士</label>
+      <div class="db-search"><input id="db-q" type="search" placeholder="例：四間飛車、美濃圍、龍馬盃" autocomplete="off"></div>
+      <ul class="db-results" id="db-results" aria-live="polite"></ul>
+    </div>
+  </div></div>
+</section>
+<section class="db-body">
+  <div class="wrap">
+    <div class="db-block">
+      <div class="sec-head"><h2>戰法圖鑑</h2><span class="jp">戦法図鑑</span><a class="more" href="/strategies/">全部戰法 →</a></div>
+      <div class="db-cats">
+        {%- for c in cats %}
+        {%- assign items = site.strategies | where: "category", c.name -%}
+        <a href="/strategies/#{{ c.name }}"><span class="t">{{ c.name }}</span><span class="jp">{{ c.ja }}</span><span class="d">{% if items.size > 0 %}{% for s in items limit: 4 %}{{ s.title }}{% unless forloop.last %}、{% endunless %}{% endfor %}{% else %}{{ c.desc }}{% endif %}</span></a>
+        {%- endfor %}
+      </div>
+    </div>
+    <div class="db-block">
+      <div class="sec-head"><h2>最新棋譜</h2><span class="jp">棋譜</span><a class="more" href="/games/">棋譜庫 →</a></div>
+      {%- if games.size > 0 %}
+      <div class="prose"><table>
+        <thead><tr><th>日期</th><th>棋戰</th><th>來源</th><th>▲先手</th><th>△後手</th><th>戰型</th><th>結果</th></tr></thead>
+        <tbody>{% for g in games limit: 8 %}{% include db-game-row.html g=g %}{% endfor %}</tbody>
+      </table></div>
+      {%- else %}
+      <p class="db-empty">棋譜整理中，陸續收錄。</p>
+      {%- endif %}
+    </div>
+    <div class="db-block">
+      <div class="sec-head"><h2>棋士名鑑</h2><span class="jp">棋士名鑑</span><a class="more" href="/players/">全部棋士 →</a></div>
+      {%- if players.size > 0 %}
+      <div class="db-people">
+        {%- for p in players limit: 8 %}
+        <a href="{{ p.url }}"><span class="av" aria-hidden="true">{{ p.title | slice: 0 }}</span><span><span class="nm">{{ p.title }}</span><span class="rk">{{ p.rank }}</span></span></a>
+        {%- endfor %}
+      </div>
+      {%- else %}
+      <p class="db-empty">棋士名鑑準備中。</p>
+      {%- endif %}
+      <p class="db-note">參加過桂馬會例會或棋戰的棋友，想登錄棋士名鑑請來信 <a href="mailto:admin@keima.club">admin@keima.club</a>，資料經本人同意後刊登。</p>
+    </div>
+  </div>
+</section>
+<script type="application/json" id="db-index">
+[{% for s in site.strategies %}{"k":"戰法","t":{{ s.title | jsonify }},"s":{{ s.ja | append: " " | append: s.kana | append: " " | append: s.category | jsonify }},"u":{{ s.url | jsonify }}},{% endfor %}{% for g in site.games %}{"k":"棋譜","t":{{ g.title | jsonify }},"s":{{ g.event | append: " " | append: g.sente | append: " " | append: g.gote | jsonify }},"u":{{ g.url | jsonify }}},{% endfor %}{% for p in site.players %}{"k":"棋士","t":{{ p.title | jsonify }},"s":{{ p.alt_name | append: " " | append: p.rank | jsonify }},"u":{{ p.url | jsonify }}},{% endfor %}{}]
+</script>
+<script>
+(function () {
+  var data = JSON.parse(document.getElementById('db-index').textContent).filter(function (d) { return d.u; });
+  var q = document.getElementById('db-q'), out = document.getElementById('db-results');
+  q.addEventListener('input', function () {
+    var v = q.value.trim().toLowerCase();
+    out.textContent = '';
+    if (!v) return;
+    var hits = data.filter(function (d) { return (d.t + ' ' + d.s).toLowerCase().indexOf(v) >= 0; }).slice(0, 12);
+    if (!hits.length) { var li = document.createElement('li'); li.className = 'db-empty'; li.textContent = '找不到相關資料'; out.appendChild(li); return; }
+    hits.forEach(function (d) {
+      var li = document.createElement('li'), a = document.createElement('a'), k = document.createElement('span'), t = document.createElement('span');
+      a.href = d.u; k.className = 'k'; k.textContent = d.k; t.className = 't'; t.textContent = d.t;
+      a.appendChild(k); a.appendChild(t); li.appendChild(a); out.appendChild(li);
+    });
+  });
+})();
+</script>

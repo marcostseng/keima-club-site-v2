@@ -4,7 +4,7 @@ sitemap: false
 ---
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{%- assign docs = site.pages | concat: site.lessons -%}
+{%- assign docs = site.pages | concat: site.lessons | concat: site.strategies | concat: site.games | concat: site.players -%}
 {%- for p in docs -%}
   {%- if p.sitemap == false or p.url contains '.xml' or p.url contains '.txt' or p.url contains '404' -%}{%- continue -%}{%- endif -%}
   {%- unless p.url contains '/assets/' %}

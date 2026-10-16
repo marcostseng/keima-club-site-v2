@@ -1,0 +1,10 @@
+{%- assign g = include.g -%}
+<tr data-source="{% if g.source == 'submitted' %}submitted{% else %}keima{% endif %}">
+  <td>{{ g.date | date: "%Y-%m-%d" }}</td>
+  <td><a href="{{ g.url }}">{{ g.event }}{% if g.round %} {{ g.round }}{% endif %}</a></td>
+  <td>{% include db-source.html source=g.source %}</td>
+  <td>{{ g.sente }}</td>
+  <td>{{ g.gote }}</td>
+  <td>{% for s in g.strategies %}{% assign u = "/strategies/" | append: s | append: "/" %}{% assign d = site.strategies | where: "url", u | first %}{% if d %}<a href="{{ d.url }}">{{ d.title }}</a>{% else %}{{ s }}{% endif %}{% unless forloop.last %}・{% endunless %}{% endfor %}</td>
+  <td>{% include db-result.html g=g %}</td>
+</tr>

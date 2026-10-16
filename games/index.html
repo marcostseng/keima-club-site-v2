@@ -1,0 +1,43 @@
+---
+layout: base
+lang: zh
+title: 將棋棋譜庫：龍馬盃與例會對局
+description: 桂馬會的將棋棋譜庫：龍馬盃、例會等桂馬會賽事與棋友投稿的對局棋譜，都能在線上逐手播放。
+permalink: /games/
+---
+{%- assign games = site.games | sort: "date" | reverse -%}
+<section class="hero page-hero" style="padding:0">
+  <div class="wrap"><div>
+    {% include db-crumb.html %}
+    <div class="hero-kicker">棋譜</div>
+    <h1>棋譜庫</h1>
+    <p class="hero-lead">桂馬會賽事與棋友投稿的對局棋譜，點進去就能逐手播放。</p>
+  </div></div>
+</section>
+<section class="db-body">
+  <div class="wrap">
+    {%- if games.size > 0 %}
+    <div class="db-filter" role="group" aria-label="依來源篩選">
+      <button type="button" class="on" data-f="">全部</button>
+      <button type="button" data-f="keima">桂馬會賽事</button>
+      <button type="button" data-f="submitted">棋友投稿</button>
+    </div>
+    <div class="prose"><table id="db-games">
+      <thead><tr><th>日期</th><th>棋戰</th><th>來源</th><th>▲先手</th><th>△後手</th><th>戰型</th><th>結果</th></tr></thead>
+      <tbody>{% for g in games %}{% include db-game-row.html g=g %}{% endfor %}</tbody>
+    </table></div>
+    <p class="db-note">「桂馬會賽事」為龍馬盃、例會等桂馬會主辦的對局；「棋友投稿」為棋士投稿的其他比賽對局。</p>
+    <script>
+    document.querySelectorAll('.db-filter button').forEach(function (b, _, all) {
+      b.addEventListener('click', function () {
+        all.forEach(function (x) { x.className = x === b ? 'on' : ''; });
+        var f = b.getAttribute('data-f');
+        document.querySelectorAll('#db-games tbody tr').forEach(function (tr) { tr.hidden = !!f && tr.getAttribute('data-source') !== f; });
+      });
+    });
+    </script>
+    {%- else %}
+    <p class="db-empty">棋譜整理中，陸續收錄。</p>
+    {%- endif %}
+  </div>
+</section>

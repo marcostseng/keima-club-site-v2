@@ -1,0 +1,39 @@
+---
+layout: base
+---
+{%- assign su = "/players/" | append: page.sente_id | append: "/" -%}
+{%- assign gu = "/players/" | append: page.gote_id | append: "/" -%}
+{%- assign sp = site.players | where: "url", su | first -%}
+{%- assign gp = site.players | where: "url", gu | first -%}
+<section class="hero page-hero" style="padding:0">
+  <div class="wrap"><div>
+    {% include db-crumb.html url="/games/" label="棋譜庫" %}
+    <div class="hero-kicker">{{ page.date | date: "%Y-%m-%d" }}・{{ page.event }}{% if page.round %}・{{ page.round }}{% endif %}</div>
+    <h1>{% if sp %}<a href="{{ sp.url }}">▲{{ page.sente }}</a>{% else %}▲{{ page.sente }}{% endif %} <span style="font-size:.55em;opacity:.7;padding:0 .3em">vs</span> {% if gp %}<a href="{{ gp.url }}">△{{ page.gote }}</a>{% else %}△{{ page.gote }}{% endif %}</h1>
+    <div class="tags">
+      {% include db-source.html source=page.source %}
+      {% for s in page.strategies %}{% assign u = "/strategies/" | append: s | append: "/" %}{% assign d = site.strategies | where: "url", u | first %}{% if d %}<a class="tag" href="{{ d.url }}">{{ d.title }}</a>{% else %}<span class="tag">{{ s }}</span>{% endif %}{% endfor %}
+      <span style="font-size:15px;color:rgba(245,240,230,.8);margin-left:8px">結果：{% if page.result == "sente" %}▲{{ page.sente }} 勝{% elsif page.result == "gote" %}△{{ page.gote }} 勝{% elsif page.result %}{{ page.result }}{% else %}—{% endif %}</span>
+    </div>
+  </div></div>
+</section>
+<section class="db-body">
+  <div class="wrap">
+    {% include kifu-player.html src=page.kif sente=page.sente gote=page.gote start=page.start %}
+    {%- assign body = content | strip -%}
+    {%- if body != "" %}
+    <div class="prose" style="max-width:var(--read);margin-top:56px">
+      <h2>講評</h2>
+      {{ content }}
+    </div>
+    {%- endif %}
+    <div class="db-actions">
+      <a class="btn btn-primary" href="{{ page.kif }}" download>下載 KIF</a>
+      {% if page.event_url %}<a class="btn btn-line" href="{{ page.event_url }}">{{ page.event }}</a>{% endif %}
+      <a class="btn btn-line" href="/games/">回棋譜庫</a>
+    </div>
+    {%- if page.source == "submitted" %}
+    <p class="db-note">本局由棋士投稿，比賽非桂馬會主辦，內容由投稿者提供。</p>
+    {%- endif %}
+  </div>
+</section>

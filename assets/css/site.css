@@ -369,3 +369,163 @@ html[lang="ja"]{--serif:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif
 .brand img{display:block;height:40px;width:auto}
 .foot-brand .brand img{height:46px}
 @media (max-width:520px){.brand img{height:34px}}
+
+
+/* ═══ 將棋資料庫（戰法・棋譜・棋士）═══ */
+.nav a[aria-current="page"]{opacity:1;border-bottom-color:var(--kin)}
+.hero h1 a{color:inherit;text-decoration:none}
+.hero-lead a{color:var(--kin-light)}
+.db-body{padding:56px 0 88px}
+.db-block{margin:0 0 72px}
+.db-block:last-child{margin-bottom:0}
+.db-narrow{max-width:880px}
+.sec-head .more{margin-left:auto;font-size:15px;white-space:nowrap}
+.db-h2{font-size:22px;padding-left:14px;border-left:3px solid var(--enji);margin:0 0 18px}
+.db-note{font-size:13px;color:var(--ink-soft);line-height:1.7;margin:10px 0 0}
+
+/* 搜尋 */
+.db-search-lb{display:block;font-size:14px;color:var(--kin-light);margin:0 0 8px;letter-spacing:.08em}
+.db-search{display:flex;gap:10px;max-width:640px}
+.db-search input{flex:1;min-width:0;height:50px;padding:0 16px;font:inherit;font-size:16px;border:1px solid var(--kin);border-radius:2px;background:var(--washi);color:var(--ink)}
+
+/* 戰法分類 */
+.db-cats{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--kin);border-bottom:1px solid var(--kin)}
+.db-cats a{padding:28px 20px;display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--ink)}
+.db-cats a + a{border-left:1px solid rgba(176,141,69,.5)}
+.db-cats a:hover{background:rgba(176,141,69,.08)}
+.db-cats .t{font-family:var(--serif);font-weight:700;font-size:21px;color:var(--kon)}
+.db-cats .jp{font-family:var(--serif);font-size:13px;color:var(--kin-ink);letter-spacing:.15em}
+.db-cats .d{font-size:14px;color:var(--ink-soft);line-height:1.7;margin-top:8px}
+
+/* 篩選 */
+.db-filter{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.db-filter button{min-height:44px;padding:0 16px;border:1px solid rgba(90,59,42,.4);background:transparent;font:inherit;font-size:14px;color:var(--ink);border-radius:2px;cursor:pointer}
+.db-filter button.on{background:var(--kon);border-color:var(--kon);color:var(--washi)}
+
+/* 標籤 */
+.tag{display:inline-block;font-size:13px;font-weight:500;line-height:1.6;padding:1px 10px;border:1px solid rgba(90,59,42,.4);color:var(--koge);text-decoration:none;white-space:nowrap}
+a.tag:hover{background:rgba(176,141,69,.12)}
+.tag.keima{background:var(--kon);border-color:var(--kon);color:var(--washi)}
+.tag.sub{background:#FBF8F2;border-color:var(--kin);color:var(--kin-ink)}
+.hero .tag{color:var(--kin-light);border-color:rgba(176,141,69,.6)}
+.hero .tag.keima{background:var(--kin);border-color:var(--kin);color:var(--kon-deep)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* 棋士卡 */
+.db-people{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.db-people a{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid rgba(176,141,69,.6);text-decoration:none;color:var(--ink)}
+.db-people a:hover{background:rgba(176,141,69,.08)}
+.db-people .nm{display:block;font-family:var(--serif);font-weight:700;font-size:18px;color:var(--kon)}
+.db-people .rk{display:block;font-size:13px;color:var(--ink-soft)}
+.av{flex:none;width:44px;height:52px;background:var(--kin);clip-path:polygon(50% 0,86% 15%,100% 100%,0 100%,14% 15%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-family:var(--serif);font-weight:900;font-size:19px;color:var(--kon-deep)}
+.av.lg{width:84px;height:100px;font-size:36px;padding-bottom:14px}
+
+/* 兩欄 */
+.db-2col{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:56px;align-items:start}
+.db-box{border:1px solid var(--kin);padding:24px;background:#FBF8F2;position:relative}
+.db-box::before{content:"";position:absolute;inset:5px;border:1px solid rgba(176,141,69,.3);pointer-events:none}
+.db-box + .db-box{margin-top:20px}
+.db-box h3{font-size:17px;margin:0 0 10px;letter-spacing:.06em}
+.db-box ul{list-style:none;margin:0;padding:0}
+.db-box li{padding:8px 0;border-bottom:1px dotted rgba(90,59,42,.35);font-size:15px;line-height:1.6}
+.db-box li:last-child{border-bottom:0}
+.db-box li small{display:block;color:var(--ink-soft);font-size:13px}
+.db-box p{font-size:15px;color:var(--ink-soft)}
+.db-box > *{position:relative}
+.db-box.danger{border-color:var(--enji)}
+.db-box.danger::before{border-color:rgba(163,50,11,.25)}
+.db-box.danger h3{color:var(--enji-dark)}
+
+/* 棋盤與棋譜播放器（assets/js/kifu.js） */
+.db-board{--c:40px;display:inline-flex;flex-direction:column;gap:4px;text-align:left}
+.db-board .fl{display:grid;grid-template-columns:repeat(9,var(--c));gap:1px;padding:0 3px;font-size:12px;color:var(--ink-soft);text-align:center;font-family:var(--serif)}
+.db-board .row{display:flex;gap:6px}
+.db-board .bd{display:grid;grid-template-columns:repeat(9,var(--c));grid-auto-rows:calc(var(--c) * 1.1);gap:1px;background:var(--koge);border:3px solid var(--koge);box-shadow:0 10px 24px rgba(30,42,74,.18)}
+.db-board .sq{background:linear-gradient(170deg,#E7CB93,#D7B475);display:flex;align-items:center;justify-content:center}
+.db-board .sq.last{background:#C99A52}
+.db-board .pc{font-family:var(--serif);font-size:calc(var(--c) * .55);font-weight:700;color:var(--kon-deep);line-height:1}
+.db-board .pc.gote{transform:rotate(180deg)}
+.db-board .rn{display:grid;grid-auto-rows:calc(var(--c) * 1.1);gap:1px;padding:3px 0;font-size:12px;color:var(--ink-soft);align-items:center;font-family:var(--serif)}
+.db-hand{font-family:var(--serif);font-size:14px;color:var(--ink-soft);line-height:1.6}
+.kifu{display:grid;grid-template-columns:auto minmax(0,1fr);gap:56px;align-items:start}
+.kifu:focus-visible{outline:2px solid var(--kin);outline-offset:6px}
+.kifu.compact{display:inline-flex}
+.kifu .left{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.kifu .side{min-width:0}
+.kifu-comment p{margin:0;white-space:pre-line}
+.db-ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.db-ctl button{min-height:44px;min-width:44px;padding:0 14px;border:1px solid var(--kin);background:transparent;color:var(--kon);font:inherit;font-size:14px;border-radius:2px;cursor:pointer}
+.db-ctl button:hover{background:rgba(176,141,69,.12)}
+.db-ctl .pos{font-family:var(--serif);font-weight:700;color:var(--koge);margin-left:6px}
+.db-moves{border-top:2px solid var(--kon);max-height:360px;overflow-y:auto;margin-bottom:24px;position:relative}
+.mv{display:flex;gap:14px;width:100%;min-height:44px;padding:0 12px;align-items:center;border:0;border-bottom:1px solid rgba(90,59,42,.18);background:transparent;font:inherit;font-size:15px;color:var(--ink);text-align:left;cursor:pointer}
+.mv:hover{background:rgba(176,141,69,.08)}
+.mv .n{width:2em;font-family:var(--serif);color:var(--kin-ink)}
+.mv.on{background:var(--kon);color:var(--washi)}
+.mv.on .n{color:var(--kin-light)}
+.db-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+@media (max-width:480px){.db-board{--c:calc((100vw - 72px) / 9.4)}}
+
+/* 棋士頁 hero */
+.db-ph{display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+.db-facts{display:flex;flex-wrap:wrap;gap:12px 40px;margin:14px 0 0}
+.db-facts div{display:flex;flex-direction:column}
+.db-facts dt{font-family:var(--serif);color:var(--kin-light);font-size:14px;letter-spacing:.15em}
+.db-facts dd{margin:0;font-size:18px;color:var(--washi)}
+
+/* 表單 */
+.db-form{max-width:var(--read)}
+.db-form h2{font-size:20px;padding-bottom:10px;border-bottom:2px solid var(--kon);margin:44px 0 22px}
+.db-form h2:first-child{margin-top:0}
+.fd{display:flex;flex-direction:column;gap:6px;margin:0 0 22px}
+.lb{font-size:15px;font-weight:700;color:var(--kon)}
+.req{color:var(--enji);margin-left:4px}
+.hint{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.in,.ta{font:inherit;font-size:16px;color:var(--ink);background:#FFFDF8;border:1px solid rgba(90,59,42,.35);border-radius:2px;padding:0 14px;height:48px;width:100%}
+.ta{height:auto;min-height:120px;padding:12px 14px;line-height:1.7}
+.in:focus,.ta:focus{outline:2px solid var(--kin);outline-offset:1px;border-color:var(--kin)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+fieldset{margin:0 0 22px;padding:0;border:0}
+legend{padding:0;margin:0 0 8px}
+.ck,.rd{display:flex;gap:10px;align-items:flex-start;min-height:44px;font-size:15.5px;line-height:1.6;margin:0 0 4px}
+.ck input,.rd input{width:20px;height:20px;margin:4px 0 0;accent-color:var(--enji);flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid rgba(90,59,42,.35);background:#FFFDF8;font-size:15px;border-radius:2px}
+.chip input{width:18px;height:18px;accent-color:var(--enji)}
+.db-form .btn{width:100%;margin-top:12px;border:0;cursor:pointer}
+.btn-sm{min-height:44px;padding:0 16px;font-size:14px}
+.btn-quiet{border:1px solid rgba(90,59,42,.45);color:var(--ink);background:transparent;cursor:pointer}
+.btn-quiet:hover{background:rgba(90,59,42,.08)}
+
+/* 審核狀態 */
+.db-notice{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:16px 20px;background:#FBF8F2;border:1px solid rgba(176,141,69,.6);border-left:4px solid var(--enji)}
+.db-notice b{color:var(--enji-dark);display:block}
+.db-notice span{font-size:14px;color:var(--ink-soft)}
+.prose td.new{background:rgba(176,141,69,.18);font-weight:700}
+
+/* 審核後台 */
+.db-admin{display:grid;grid-template-columns:320px minmax(0,1fr);gap:40px;align-items:start}
+.db-queue{border-top:2px solid var(--kon)}
+.qi{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;padding:16px 14px;border:0;border-bottom:1px solid rgba(90,59,42,.2);background:transparent;font:inherit;text-align:left;color:var(--ink);cursor:pointer}
+.qi:hover{background:rgba(176,141,69,.08)}
+.qi.on{background:#FBF8F2;box-shadow:inset 3px 0 0 var(--enji)}
+.qi .nm{font-family:var(--serif);font-weight:700;color:var(--kon);font-size:17px}
+.qi .st{font-size:13px;color:var(--ink-soft)}
+
+@media (max-width:860px){
+  .db-cats{grid-template-columns:1fr 1fr}
+  .db-cats a + a{border-left:0}
+  .db-cats a{border-bottom:1px solid rgba(176,141,69,.35)}
+  .db-2col,.kifu,.db-admin{grid-template-columns:1fr;gap:40px}
+  .grid2{grid-template-columns:1fr}
+}
+
+/* 搜尋結果、空狀態 */
+.db-results{list-style:none;margin:24px 0 0;padding:0;max-width:640px;background:var(--washi);color:var(--ink)}
+.db-results:empty{display:none}
+.db-results a{display:flex;gap:12px;align-items:baseline;padding:12px 16px;border-bottom:1px solid rgba(90,59,42,.2);text-decoration:none;color:var(--ink)}
+.db-results a:hover{background:rgba(176,141,69,.12)}
+.db-results .k{font-size:12px;color:var(--kin-ink);border:1px solid rgba(176,141,69,.6);padding:0 6px;white-space:nowrap}
+.db-results .t{font-family:var(--serif);font-weight:700;color:var(--kon)}
+.db-empty{padding:20px;border:1px dashed rgba(90,59,42,.4);color:var(--ink-soft);margin:0}
+tr[hidden]{display:none}

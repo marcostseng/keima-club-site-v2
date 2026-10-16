@@ -61,6 +61,13 @@ sitemap: false
 {% assign arts = site.pages | where: "article", true | sort: "date" | reverse -%}
 {% for a in arts %}- [{{ a.title }}]({{ a.url | absolute_url }})：{{ a.description }}
 {% endfor %}
+## 將棋資料庫
+
+戰法圖鑑、對局棋譜（可線上逐手播放）與棋士名鑑：{{ "/db/" | absolute_url }}
+
+{% assign sts = site.strategies | sort: "title" -%}
+{% for s in sts %}- [戰法：{{ s.title }}]({{ s.url | absolute_url }})：{{ s.description }}
+{% endfor %}
 ## 入會
 
 - 入會費 NT$1,000（一次性，無年費）

@@ -1,0 +1,35 @@
+---
+layout: base
+lang: zh
+title: 將棋戰法圖鑑：居飛車・振飛車・圍王・手筋
+description: 桂馬會將棋戰法圖鑑：依居飛車、振飛車、相振飛車、圍王、手筋分類，附代表局面與實戰棋譜。
+permalink: /strategies/
+---
+<section class="hero page-hero" style="padding:0">
+  <div class="wrap"><div>
+    {% include db-crumb.html %}
+    <div class="hero-kicker">戦法図鑑</div>
+    <h1>戰法圖鑑</h1>
+    <p class="hero-lead">常見的將棋戰法與圍王，每個戰法都附代表局面，並連到實戰棋譜。</p>
+  </div></div>
+</section>
+<section class="db-body">
+  <div class="wrap" style="max-width:860px">
+    {%- assign found = 0 -%}
+    {%- for c in site.data.strategy_categories %}
+    {%- assign items = site.strategies | where: "category", c.name | sort: "order" -%}
+    {%- if items.size > 0 %}
+    {%- assign found = 1 -%}
+    <div class="db-block" id="{{ c.name }}">
+      <div class="sec-head"><h2>{{ c.name }}</h2><span class="jp">{{ c.ja }}</span></div>
+      <ol class="lesson-list">
+        {%- for s in items %}
+        <li><a href="{{ s.url }}"><span class="no">{{ s.ja }}</span><span><span class="t">{{ s.title }}</span><span class="d">{{ s.description }}</span></span></a></li>
+        {%- endfor %}
+      </ol>
+    </div>
+    {%- endif %}
+    {%- endfor %}
+    {%- if found == 0 %}<p class="db-empty">戰法圖鑑準備中。</p>{% endif %}
+  </div>
+</section>

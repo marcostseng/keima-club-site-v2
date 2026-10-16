@@ -1,0 +1,78 @@
+---
+layout: base
+---
+{%- assign pid = page.url | split: "/" | last -%}
+{%- assign games = site.games | where_exp: "g", "g.sente_id == pid or g.gote_id == pid" | sort: "date" | reverse -%}
+{%- assign hn = page.honor_name | default: page.title -%}
+{%- capture honors -%}
+{%- for ti in site.data.titles -%}
+  {%- for r in ti.results -%}
+    {%- if r.winner and r.winner == hn -%}<li><span class="yr">{{ r.year }}</span><span class="ed">第{{ r.ed }}屆</span><span class="who">{{ ti.name.zh }}<small>優勝</small></span></li>{%- endif -%}
+    {%- for w in r.winners -%}{%- if w.name == hn -%}<li><span class="yr">{{ r.year }}</span><span class="ed">{{ r.label.zh }}</span><span class="who">{{ ti.name.zh }}<small>{{ w.note.zh }}</small></span></li>{%- endif -%}{%- endfor -%}
+  {%- endfor -%}
+  {%- for s in ti.seasons -%}
+    {%- if s.spring == hn -%}<li><span class="yr">{{ s.year }}</span><span class="ed">春</span><span class="who">{{ ti.name.zh }}<small>優勝</small></span></li>{%- endif -%}
+    {%- if s.summer == hn -%}<li><span class="yr">{{ s.year }}</span><span class="ed">夏</span><span class="who">{{ ti.name.zh }}<small>優勝</small></span></li>{%- endif -%}
+    {%- if s.autumn == hn -%}<li><span class="yr">{{ s.year }}</span><span class="ed">秋</span><span class="who">{{ ti.name.zh }}<small>優勝</small></span></li>{%- endif -%}
+    {%- if s.winter == hn -%}<li><span class="yr">{{ s.year }}</span><span class="ed">冬</span><span class="who">{{ ti.name.zh }}<small>優勝</small></span></li>{%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- endcapture -%}
+<section class="hero page-hero" style="padding:0">
+  <div class="wrap"><div>
+    {% include db-crumb.html url="/players/" label="棋士名鑑" %}
+    <div class="db-ph">
+      {% if page.photo %}<img src="/assets/img/players/{{ page.photo }}" alt="" width="84" height="100" style="width:84px;height:100px;object-fit:cover">{% else %}<span class="av lg" aria-hidden="true">{{ page.title | slice: 0 }}</span>{% endif %}
+      <div>
+        <div class="hero-kicker" style="margin-bottom:8px">棋士名鑑{% if page.alt_name %}・{{ page.alt_name }}{% endif %}</div>
+        <h1 style="margin-bottom:0">{{ page.title }}</h1>
+        <dl class="db-facts">
+          {% if page.rank %}<div><dt>段級位</dt><dd>{{ page.rank }}</dd></div>{% endif %}
+          {% if page.since %}<div><dt>首次參賽</dt><dd>{{ page.since }}</dd></div>{% endif %}
+          <div><dt>收錄對局</dt><dd>{{ games.size }} 局</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div></div>
+</section>
+<section class="db-body">
+  <div class="wrap"><div class="db-2col">
+    <div class="prose">
+      <h2>頭銜與優勝</h2>
+      {% if honors != "" %}<ol class="honors">{{ honors }}</ol>{% else %}<p>目前沒有優勝紀錄。</p>{% endif %}
+      <p class="db-note">依「<a href="/titles/">棋戰與歷屆優勝</a>」自動列出。</p>
+      <h2>對局紀錄</h2>
+      {%- if games.size > 0 %}
+      <table>
+        <thead><tr><th>日期</th><th>棋戰</th><th>來源</th><th>先後</th><th>對手</th><th>結果</th></tr></thead>
+        <tbody>
+        {%- for g in games %}
+        <tr>
+          <td>{{ g.date | date: "%Y-%m-%d" }}</td>
+          <td><a href="{{ g.url }}">{{ g.event }}{% if g.round %} {{ g.round }}{% endif %}</a></td>
+          <td>{% include db-source.html source=g.source %}</td>
+          {%- if g.sente_id == pid %}
+          <td>▲</td><td>{{ g.gote }}</td><td>{% if g.result == "sente" %}勝{% elsif g.result == "gote" %}敗{% else %}{{ g.result | default: "—" }}{% endif %}</td>
+          {%- else %}
+          <td>△</td><td>{{ g.sente }}</td><td>{% if g.result == "gote" %}勝{% elsif g.result == "sente" %}敗{% else %}{{ g.result | default: "—" }}{% endif %}</td>
+          {%- endif %}
+        </tr>
+        {%- endfor %}
+        </tbody>
+      </table>
+      {%- else %}
+      <p class="db-empty">目前還沒有收錄的對局。</p>
+      {%- endif %}
+    </div>
+    <aside>
+      {%- if page.styles %}
+      <div class="db-box"><h3>常用戰法</h3><div class="tags">{% for s in page.styles %}{% assign u = "/strategies/" | append: s | append: "/" %}{% assign d = site.strategies | where: "url", u | first %}{% if d %}<a class="tag" href="{{ d.url }}">{{ d.title }}</a>{% else %}<span class="tag">{{ s }}</span>{% endif %}{% endfor %}</div></div>
+      {%- endif %}
+      {%- assign bio = content | strip -%}
+      {%- if bio != "" %}
+      <div class="db-box"><h3>個人簡介</h3>{{ content }}</div>
+      {%- endif %}
+      <p class="db-note" style="margin-top:20px">本頁資料經本人同意刊登。如需修改或下架，請來信 <a href="mailto:admin@keima.club">admin@keima.club</a>。</p>
+    </aside>
+  </div></div>
+</section>

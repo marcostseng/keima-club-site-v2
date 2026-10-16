@@ -1,0 +1,45 @@
+---
+layout: base
+---
+{%- assign sid = page.url | split: "/" | last -%}
+{%- assign games = site.games | where_exp: "g", "g.strategies contains sid" | sort: "date" | reverse -%}
+<section class="hero page-hero" style="padding:0">
+  <div class="wrap"><div>
+    {% include db-crumb.html url="/strategies/" label="戰法圖鑑" extra=page.category %}
+    {% if page.ja %}<div class="hero-kicker">{{ page.ja }}{% if page.kana %}（{{ page.kana }}）{% endif %}</div>{% endif %}
+    <h1>{{ page.title }}</h1>
+    <p class="hero-lead">{{ page.description }}</p>
+    {%- if page.labels %}
+    <div class="tags">{% for t in page.labels %}<span class="tag">{{ t }}</span>{% endfor %}</div>
+    {%- endif %}
+  </div></div>
+</section>
+<section class="db-body">
+  <div class="wrap"><div class="db-2col">
+    <article class="prose">
+      {%- if page.kif %}
+      <figure class="diagram">
+        {% include kifu-player.html src=page.kif start="last" compact=true %}
+        {% if page.kif_caption %}<figcaption>{{ page.kif_caption }}</figcaption>{% endif %}
+      </figure>
+      {%- endif %}
+      {{ content }}
+    </article>
+    <aside>
+      {%- if page.castles %}
+      <div class="db-box"><h3>搭配圍王</h3><ul>{% for s in page.castles %}<li>{% include db-strategy-link.html s=s %}</li>{% endfor %}</ul></div>
+      {%- endif %}
+      {%- if page.related %}
+      <div class="db-box"><h3>相關戰法</h3><ul>{% for s in page.related %}<li>{% include db-strategy-link.html s=s %}</li>{% endfor %}</ul></div>
+      {%- endif %}
+      <div class="db-box"><h3>使用此戰法的對局</h3>
+        {%- if games.size > 0 %}
+        <ul>{% for g in games limit: 8 %}<li><a href="{{ g.url }}">{{ g.event }}{% if g.round %} {{ g.round }}{% endif %}</a><small>{{ g.sente }} vs {{ g.gote }}</small>{% include db-source.html source=g.source %}</li>{% endfor %}</ul>
+        {%- else %}
+        <p style="margin:0">目前還沒有收錄的對局。</p>
+        {%- endif %}
+        <p style="margin:12px 0 0"><a href="/games/">棋譜庫 →</a></p>
+      </div>
+    </aside>
+  </div></div>
+</section>
