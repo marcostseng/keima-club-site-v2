@@ -438,14 +438,16 @@ a.tag:hover{background:rgba(176,141,69,.12)}
 
 /* 棋盤與棋譜播放器（assets/js/kifu.js） */
 .db-board{--c:40px;display:inline-flex;flex-direction:column;gap:4px;text-align:left}
-.db-board .fl{display:grid;grid-template-columns:repeat(9,var(--c));gap:1px;padding:0 3px;font-size:12px;color:var(--ink-soft);text-align:center;font-family:var(--serif)}
+.db-board .fl{display:grid;grid-template-columns:repeat(9,var(--c));padding:0 3px;font-size:12px;color:var(--ink-soft);text-align:center;font-family:var(--serif)}
 .db-board .row{display:flex;gap:6px}
-.db-board .bd{display:grid;grid-template-columns:repeat(9,var(--c));grid-auto-rows:calc(var(--c) * 1.1);gap:1px;background:var(--koge);border:3px solid var(--koge);box-shadow:0 10px 24px rgba(30,42,74,.18)}
-.db-board .sq{background:linear-gradient(170deg,#E7CB93,#D7B475);display:flex;align-items:center;justify-content:center}
+.db-board .bd{display:grid;grid-template-columns:repeat(9,var(--c));grid-auto-rows:calc(var(--c) * 1.1);background:linear-gradient(170deg,#E7CB93,#D7B475);border:3px solid var(--koge);box-shadow:0 10px 24px rgba(30,42,74,.18)}
+.db-board .sq{box-sizing:border-box;border-right:1px solid var(--koge);border-bottom:1px solid var(--koge);display:flex;align-items:center;justify-content:center}
+.db-board .sq:nth-child(9n){border-right:0}
+.db-board .sq:nth-last-child(-n+9){border-bottom:0}
 .db-board .sq.last{background:#C99A52}
 .db-board .pc{font-family:var(--serif);font-size:calc(var(--c) * .55);font-weight:700;color:var(--kon-deep);line-height:1}
 .db-board .pc.gote{transform:rotate(180deg)}
-.db-board .rn{display:grid;grid-auto-rows:calc(var(--c) * 1.1);gap:1px;padding:3px 0;font-size:12px;color:var(--ink-soft);align-items:center;font-family:var(--serif)}
+.db-board .rn{display:grid;grid-auto-rows:calc(var(--c) * 1.1);padding:3px 0;font-size:12px;color:var(--ink-soft);align-items:center;font-family:var(--serif)}
 .db-hand{font-family:var(--serif);font-size:14px;color:var(--ink-soft);line-height:1.6}
 .kifu{display:grid;grid-template-columns:auto minmax(0,1fr);gap:56px;align-items:start}
 .kifu:focus-visible{outline:2px solid var(--kin);outline-offset:6px}
