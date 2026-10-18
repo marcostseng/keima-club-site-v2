@@ -1,6 +1,6 @@
 ---
 permalink: "/join-line-group/"
-redirect_to: /
+redirect_to: /#community
 
 # 舊網站成效（3 個月）：點擊 3、曝光 32
 ---

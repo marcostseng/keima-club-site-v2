@@ -1,6 +1,6 @@
 ---
 permalink: "/product-tag/將棋戰術/"
-redirect_to: /
+redirect_to: /strategies/
 
 # 舊網站成效（3 個月）：點擊 0、曝光 1
 ---
