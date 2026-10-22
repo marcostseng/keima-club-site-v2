@@ -15,14 +15,15 @@ const CONFIG = {
   REPO: 'keima-club-site-v2',
   BRANCH: 'main',
   SITE: 'https://keima.club',
-  ADMIN_EMAIL: 'admin@keima.club',
+  ADMIN_EMAIL: 'admin@keima.club',   // 對外顯示的聯絡信箱
+  NOTIFY_EMAIL: 'xshogi@gmail.com',  // 主辦人收通知的信箱（直接寄到 Gmail，避免轉寄被去重）
   APPROVE_NEW: true,      // true：新登錄要主辦人核准；false：Email 驗證後直接上線
   LINK_HOURS: 24,         // 修改連結有效時間
   ADMIN_LINK_DAYS: 14,    // 核准、還原連結有效時間
   MAX_BIO: 300,
   MAX_STYLES: 5,
   PHOTO_MAX_CHARS: 48000, // 大頭照 base64 上限（試算表單格上限 5 萬字）
-  WEBAPP_URL: '',         // 部署後貼上網頁應用程式網址（結尾 /exec）；留空則自動偵測
+  WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbxlr14PhsT0fhfK47N8k1ticia9brU1Js171dxLCQTgkFnTgcoW-LjbD7foMSt9y44Vlw/exec',         // 部署後貼上網頁應用程式網址（結尾 /exec）；留空則自動偵測
 };
 
 const RANKS = ['15級','14級','13級','12級','11級','10級','9級','8級','7級','6級','5級','4級','3級','2級','1級',
@@ -47,7 +48,7 @@ function setup() {
   }
   const r = gh_('get', '_players');
   if (r.code !== 200) throw new Error('GitHub 連線失敗（' + r.code + '）：請確認 token 有這個 repository 的 Contents 讀寫權限。');
-  MailApp.sendEmail(CONFIG.ADMIN_EMAIL, '棋手自助系統已建立',
+  MailApp.sendEmail(CONFIG.NOTIFY_EMAIL, '棋手自助系統已建立',
     '試算表：https://docs.google.com/spreadsheets/d/' + props.getProperty('SHEET_ID') +
     '\n\nGitHub 連線正常。下一步：部署 → 新增部署作業 → 網頁應用程式，把網址填進網站的 _data/links.yml 的 player_portal。');
 }
@@ -169,7 +170,7 @@ function submitEdit(token, f) {
   const logRow = sheet_('Log').getLastRow();
 
   const url = CONFIG.SITE + '/players/' + tk.slug + '/';
-  MailApp.sendEmail({ to: CONFIG.ADMIN_EMAIL, subject: '【棋手自助】' + d.title + ' 更新了資料',
+  MailApp.sendEmail({ to: CONFIG.NOTIFY_EMAIL, subject: '【棋手自助】' + d.title + ' 更新了資料',
     htmlBody: mailHtml_(d.title + ' 更新了資料', summary_(d, url) +
       (newPhoto ? '<p><img src="cid:p" width="120"></p>' : '') +
       '<p>資料已經上線，約 1～2 分鐘後生效。內容有問題時：</p>' +
@@ -193,7 +194,7 @@ function removeProfile(token) {
   useToken_(token, 'edit', true);
   touch_(row, 'removed');
   sheet_('Log').appendRow([new Date(), tk.slug, 'remove', '本人下架', prev]);
-  MailApp.sendEmail(CONFIG.ADMIN_EMAIL, '【棋手自助】' + (old.title || tk.slug) + ' 已下架',
+  MailApp.sendEmail(CONFIG.NOTIFY_EMAIL, '【棋手自助】' + (old.title || tk.slug) + ' 已下架',
     '本人已下架棋手頁 ' + tk.slug + '。棋譜檔中的 sente_id／gote_id 若填了這個代號，請改成不具名寫法。');
   notifyPlayer_(row, '【桂馬會】你的棋手頁已下架', '<p>你的棋手頁和照片已經刪除。想再登錄的話，隨時歡迎回來。</p>');
   return '已下架。約 1～2 分鐘後，棋手頁就會消失。';
@@ -288,7 +289,7 @@ function afterConsent_(row, d) {
   touch_(row, 'pending');
   const photo = row.values[P.photo];
   const h = CONFIG.ADMIN_LINK_DAYS * 24;
-  MailApp.sendEmail({ to: CONFIG.ADMIN_EMAIL, subject: '【棋手自助】新登錄待核准：' + d.title,
+  MailApp.sendEmail({ to: CONFIG.NOTIFY_EMAIL, subject: '【棋手自助】新登錄待核准：' + d.title,
     htmlBody: mailHtml_('新登錄：' + esc_(d.title), summary_(d, '') +
       '<p>網址代號：' + slug + '<br>Email：' + esc_(row.values[P.email]) +
       (row.values[P.guardian] ? '<br>法定代理人：' + esc_(row.values[P.guardian]) + '（已同意）' : '') + '</p>' +
