@@ -23,7 +23,8 @@ const CONFIG = {
   MAX_BIO: 300,
   MAX_STYLES: 5,
   PHOTO_MAX_CHARS: 48000, // 大頭照 base64 上限（試算表單格上限 5 萬字）
-  WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbxlr14PhsT0fhfK47N8k1ticia9brU1Js171dxLCQTgkFnTgcoW-LjbD7foMSt9y44Vlw/exec',         // 部署後貼上網頁應用程式網址（結尾 /exec）；留空則自動偵測
+  WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbxlr14PhsT0fhfK47N8k1ticia9brU1Js171dxLCQTgkFnTgcoW-LjbD7foMSt9y44Vlw/exec',
+  ONE_PER_EMAIL: true,    // 一個 Email 只能登錄一份棋手頁
 };
 
 const RANKS = ['15級','14級','13級','12級','11級','10級','9級','8級','7級','6級','5級','4級','3級','2級','1級',
@@ -116,13 +117,32 @@ function submitRegistration(f) {
   if (!f.consent) throw new Error('請勾選同意公開。');
   const photo = cleanPhoto_(f.photo);
 
+  const done = '確認信已寄到 ' + email + '，請在 ' + CONFIG.LINK_HOURS + ' 小時內點信中的連結。沒收到的話，請看看垃圾郵件匣。';
   const lock = LockService.getScriptLock(); lock.waitLock(20000);
   try {
+    const sh = sheet_('Players');
+    // 同一個 Email 已有棋手頁或正在審核：不建立新資料，改寄信告知本人（畫面訊息相同，不透露 Email 是否登錄過）
+    if (CONFIG.ONE_PER_EMAIL) {
+      const mine = sh.getDataRange().getValues().map((v, i) => ({ index: i + 1, values: v }))
+        .filter(r => r.index > 1 && r.values[P.email] === email);
+      const active = mine.filter(r => ['live', 'pending', 'guardian'].indexOf(r.values[P.status]) >= 0)[0];
+      if (active) {
+        if (active.values[P.status] === 'live') sendEditLinks_(email, true);
+        else MailApp.sendEmail({ to: email, subject: '【桂馬會】你的棋手名鑑登錄正在處理中',
+          htmlBody: mailHtml_('登錄正在處理中', '<p>這個 Email 已經登錄過棋手名鑑（' + esc_(active.values[P.slug]) +
+            '），目前正在等待確認或審核，不需要重新登錄。有問題請回信到 ' + CONFIG.ADMIN_EMAIL + '。</p>') });
+        return done;
+      }
+      // 尚未點確認信的舊登錄（例如填錯資料重填）：以新的為準
+      mine.filter(r => r.values[P.status] === 'verifying').reverse().forEach(r => sh.deleteRow(r.index));
+    }
     const row = findRow_(slug);
-    if ((row && ['rejected','removed'].indexOf(row.values[P.status]) < 0) || ghGetText_('_players/' + slug + '.md'))
+    const stale = row && row.values[P.status] === 'verifying' &&
+      new Date(row.values[P.created]).getTime() < Date.now() - CONFIG.LINK_HOURS * 3600e3;
+    if ((row && !stale && ['rejected','removed'].indexOf(row.values[P.status]) < 0) || ghGetText_('_players/' + slug + '.md'))
       throw new Error('網址代號「' + slug + '」已經有人使用，請換一個。');
-    if (row) sheet_('Players').deleteRow(row.index);
-    sheet_('Players').appendRow([slug, email, f.minor ? guardian : '', 'verifying', new Date(), new Date(), '',
+    if (row) sh.deleteRow(row.index);
+    sh.appendRow([slug, email, f.minor ? guardian : '', 'verifying', new Date(), new Date(), '',
       JSON.stringify(d), photo || '']);
   } finally { lock.releaseLock(); }
 
@@ -130,7 +150,7 @@ function submitRegistration(f) {
   MailApp.sendEmail({ to: email, subject: '【桂馬會】請確認你的棋手名鑑登錄',
     htmlBody: mailHtml_('確認你的 Email', '<p>你剛才在桂馬會棋手名鑑登錄了「' + esc_(d.title) + '」。請按下方按鈕確認這是你的 Email：</p>' +
       button_(link, '確認 Email') + '<p style="color:#666;font-size:13px">連結 ' + CONFIG.LINK_HOURS + ' 小時內有效。如果不是你本人操作，請忽略這封信。</p>') });
-  return '確認信已寄到 ' + email + '，請在 ' + CONFIG.LINK_HOURS + ' 小時內點信中的連結。沒收到的話，請看看垃圾郵件匣。';
+  return done;
 }
 
 function requestEditLink(email) {
@@ -420,12 +440,12 @@ function touch_(row, status) {
   row.values[P.status] = status;
 }
 
-function sendEditLinks_(email) {
+function sendEditLinks_(email, already) {
   const rows = sheet_('Players').getDataRange().getValues().filter((r, i) => i > 0 && r[P.email] === email && r[P.status] === 'live');
   if (!rows.length) return;
   const links = rows.map(r => '<p><b>' + esc_(r[P.slug]) + '</b><br>' + button_(tokenLink_('edit', r[P.slug], CONFIG.LINK_HOURS), '修改這份資料') + '</p>').join('');
   MailApp.sendEmail({ to: email, subject: '【桂馬會】棋手資料修改連結',
-    htmlBody: mailHtml_('修改你的棋手資料', '<p>按下方按鈕就能修改或下架你的棋手頁：</p>' + links +
+    htmlBody: mailHtml_('修改你的棋手資料', (already ? '<p>這個 Email 已經有棋手頁了，不需要重新登錄。想更新資料的話，按下方按鈕修改：</p>' : '<p>按下方按鈕就能修改或下架你的棋手頁：</p>') + links +
       '<p style="color:#666;font-size:13px">連結 ' + CONFIG.LINK_HOURS + ' 小時內有效，期間可以多次修改。不是你本人申請的話，請忽略這封信。</p>') });
 }
 
