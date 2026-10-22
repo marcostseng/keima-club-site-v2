@@ -9,7 +9,7 @@ event_url: /titles/ryuma-2026/
 round: 一回戰
 source: keima          # keima＝桂馬會賽事；submitted＝棋友投稿
 sente: 王小明           # 顯示名稱；未同意公開的人寫「對手（二段）」之類
-sente_id: wang-xiaoming # 選填：_players 裡的檔名（不含 .md），有才會連到棋士頁
+sente_id: wang-xiaoming # 選填：_players 裡的檔名（不含 .md），有才會連到棋手頁
 gote: 李大華
 gote_id:
 result: sente          # sente＝先手勝；gote＝後手勝；其他直接寫文字，例如「千日手」

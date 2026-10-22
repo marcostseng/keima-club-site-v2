@@ -1,8 +1,8 @@
 ---
 layout: base
 lang: zh
-title: 將棋資料庫：戰法圖鑑・棋譜・棋士名鑑
-description: 桂馬會的將棋資料庫：查詢戰法圖鑑、線上逐手播放的對局棋譜，以及棋士名鑑與歷屆優勝紀錄。
+title: 將棋資料庫：戰法圖鑑・棋譜・棋手名鑑
+description: 桂馬會的將棋資料庫：查詢戰法圖鑑、線上逐手播放的對局棋譜，以及棋手名鑑與歷屆優勝紀錄。
 permalink: /db/
 ---
 {%- assign cats = site.data.strategy_categories -%}
@@ -12,9 +12,9 @@ permalink: /db/
   <div class="wrap"><div>
     <div class="hero-kicker">将棋データベース</div>
     <h1>將棋資料庫</h1>
-    <p class="hero-lead">查詢戰法、對局棋譜與棋士資料。棋譜都能在線上逐手播放，戰法、棋譜、棋士之間互相連結。</p>
+    <p class="hero-lead">查詢戰法、對局棋譜與棋手資料。棋譜都能在線上逐手播放，戰法、棋譜、棋手之間互相連結。</p>
     <div style="margin-top:32px">
-      <label class="db-search-lb" for="db-q">搜尋戰法、棋譜、棋士</label>
+      <label class="db-search-lb" for="db-q">搜尋戰法、棋譜、棋手</label>
       <div class="db-search"><input id="db-q" type="search" placeholder="例：四間飛車、美濃圍、龍馬盃" autocomplete="off"></div>
       <ul class="db-results" id="db-results" aria-live="polite"></ul>
     </div>
@@ -43,7 +43,7 @@ permalink: /db/
       {%- endif %}
     </div>
     <div class="db-block">
-      <div class="sec-head"><h2>棋士名鑑</h2><span class="jp">棋士名鑑</span><a class="more" href="/players/">全部棋士 →</a></div>
+      <div class="sec-head"><h2>棋手名鑑</h2><span class="jp">選手名鑑</span><a class="more" href="/players/">全部棋手 →</a></div>
       {%- if players.size > 0 %}
       <div class="db-people">
         {%- for p in players limit: 8 %}
@@ -51,14 +51,14 @@ permalink: /db/
         {%- endfor %}
       </div>
       {%- else %}
-      <p class="db-empty">棋士名鑑準備中。</p>
+      <p class="db-empty">棋手名鑑準備中。</p>
       {%- endif %}
-      <p class="db-note">參加過桂馬會例會或棋戰的棋友，想登錄棋士名鑑請來信 <a href="mailto:admin@keima.club">admin@keima.club</a>，資料經本人同意後刊登。</p>
+      <p class="db-note">參加過桂馬會例會或棋戰的棋友，想登錄棋手名鑑請來信 <a href="mailto:admin@keima.club">admin@keima.club</a>，資料經本人同意後刊登。</p>
     </div>
   </div>
 </section>
 <script type="application/json" id="db-index">
-[{% for s in site.strategies %}{"k":"戰法","t":{{ s.title | jsonify }},"s":{{ s.ja | append: " " | append: s.kana | append: " " | append: s.category | jsonify }},"u":{{ s.url | jsonify }}},{% endfor %}{% for g in site.games %}{"k":"棋譜","t":{{ g.title | jsonify }},"s":{{ g.event | append: " " | append: g.sente | append: " " | append: g.gote | jsonify }},"u":{{ g.url | jsonify }}},{% endfor %}{% for p in site.players %}{"k":"棋士","t":{{ p.title | jsonify }},"s":{{ p.alt_name | append: " " | append: p.rank | jsonify }},"u":{{ p.url | jsonify }}},{% endfor %}{}]
+[{% for s in site.strategies %}{"k":"戰法","t":{{ s.title | jsonify }},"s":{{ s.ja | append: " " | append: s.kana | append: " " | append: s.category | jsonify }},"u":{{ s.url | jsonify }}},{% endfor %}{% for g in site.games %}{"k":"棋譜","t":{{ g.title | jsonify }},"s":{{ g.event | append: " " | append: g.sente | append: " " | append: g.gote | jsonify }},"u":{{ g.url | jsonify }}},{% endfor %}{% for p in site.players %}{"k":"棋手","t":{{ p.title | jsonify }},"s":{{ p.alt_name | append: " " | append: p.rank | jsonify }},"u":{{ p.url | jsonify }}},{% endfor %}{}]
 </script>
 <script>
 (function () {

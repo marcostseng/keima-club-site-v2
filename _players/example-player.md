@@ -1,8 +1,8 @@
 ---
-# ── 棋士範本：取得本人同意後，複製這個檔案、檔名用英文（例如 wang-xiaoming.md），再把下面一行刪掉 ──
+# ── 棋手範本：取得本人同意後，複製這個檔案、檔名用英文（例如 wang-xiaoming.md），再把下面一行刪掉 ──
 published: false
 title: 王小明              # 顯示名稱（本名或暱稱）
-description: "桂馬會棋士王小明的段級位、對局紀錄與優勝紀錄。"
+description: "桂馬會棋手王小明的段級位、對局紀錄與優勝紀錄。"
 alt_name: Wang Xiaoming    # 選填：日文或英文名稱
 rank: 二段
 since: 2019                # 選填：首次參加桂馬會活動的年份

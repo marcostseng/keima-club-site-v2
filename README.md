@@ -52,11 +52,11 @@
 |---|---|
 | 新增戰法 | `_strategies/`，參考 `shikenbisha.md`；分類名稱要和 `_data/strategy_categories.yml` 一致 |
 | 新增棋譜 | KIF 檔放 `assets/kifu/games/年份/`，再複製 `_games/example-game.md` 改內容 |
-| 新增棋士 | **先取得本人同意**，再複製 `_players/example-player.md`；大頭照放 `assets/img/players/` |
+| 新增棋手 | **先取得本人同意**，再複製 `_players/example-player.md`；大頭照放 `assets/img/players/` |
 
 - 檔名一律英文小寫加連字號，例如 `ryuma-2026-dan-r1-01.md`、`wang-xiaoming.md`；網址就是檔名
-- 棋譜檔的 `sente_id`／`gote_id` 填棋士的檔名（不含 .md），棋士頁就會自動列出對局
-- 棋士頁的優勝紀錄自動從 `_data/titles.yml` 讀取，名字要一致（不一致時填 `honor_name`）
+- 棋譜檔的 `sente_id`／`gote_id` 填棋手的檔名（不含 .md），棋手頁就會自動列出對局
+- 棋手頁的優勝紀錄自動從 `_data/titles.yml` 讀取，名字要一致（不一致時填 `honor_name`）
 - `strategies`、`castles`、`related`、`styles` 填戰法檔名；還沒有頁面的直接寫中文名稱，會顯示文字不加連結
 - 棋譜播放器只支援平手 KIF（Shift_JIS 或 UTF-8 都可以），分支（変化）只讀本譜
 - 未經本人同意的對手，`sente`／`gote` 寫「對手（二段）」這類不具名的寫法

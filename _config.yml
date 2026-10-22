@@ -21,7 +21,7 @@ collections:
   games:                # 將棋資料庫：棋譜（_games 資料夾，一局一個檔案）
     output: true
     permalink: /games/:name/
-  players:              # 將棋資料庫：棋士（_players 資料夾，一人一個檔案，需本人同意）
+  players:              # 將棋資料庫：棋手（_players 資料夾，一人一個檔案，需本人同意）
     output: true
     permalink: /players/:name/
 

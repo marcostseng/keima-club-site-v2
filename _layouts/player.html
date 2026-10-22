@@ -20,11 +20,11 @@ layout: base
 {%- endcapture -%}
 <section class="hero page-hero" style="padding:0">
   <div class="wrap"><div>
-    {% include db-crumb.html url="/players/" label="棋士名鑑" %}
+    {% include db-crumb.html url="/players/" label="棋手名鑑" %}
     <div class="db-ph">
       {% if page.photo %}<img src="/assets/img/players/{{ page.photo }}" alt="" width="84" height="100" style="width:84px;height:100px;object-fit:cover">{% else %}<span class="av lg" aria-hidden="true">{{ page.title | slice: 0 }}</span>{% endif %}
       <div>
-        <div class="hero-kicker" style="margin-bottom:8px">棋士名鑑{% if page.alt_name %}・{{ page.alt_name }}{% endif %}</div>
+        <div class="hero-kicker" style="margin-bottom:8px">棋手名鑑{% if page.alt_name %}・{{ page.alt_name }}{% endif %}</div>
         <h1 style="margin-bottom:0">{{ page.title }}</h1>
         <dl class="db-facts">
           {% if page.rank %}<div><dt>段級位</dt><dd>{{ page.rank }}</dd></div>{% endif %}
