@@ -2,7 +2,9 @@
 layout: base
 ---
 {%- assign pid = page.url | split: "/" | last -%}
-{%- assign games = site.games | where_exp: "g", "g.sente_id == pid or g.gote_id == pid" | sort: "date" | reverse -%}
+{%- assign games_s = site.games | where: "sente_id", pid -%}
+{%- assign games_g = site.games | where: "gote_id", pid -%}
+{%- assign games = games_s | concat: games_g | sort: "date" | reverse -%}
 {%- assign hn = page.honor_name | default: page.title -%}
 {%- capture honors -%}
 {%- for ti in site.data.titles -%}
