@@ -30,7 +30,7 @@ const CONFIG = {
 const RANKS = ['15級','14級','13級','12級','11級','10級','9級','8級','7級','6級','5級','4級','3級','2級','1級',
   '初段','二段','三段','四段','五段','六段','七段','八段'];
 const RESERVED = ['example-player','register','edit','index','admin'];
-const P = { slug:0, email:1, guardian:2, status:3, created:4, updated:5, consent:6, pending:7, photo:8 };
+const P = { slug:0, email:1, guardian:2, status:3, created:4, updated:5, consent:6, pending:7, photo:8, real:9 };
 
 /* ───────── 安裝 ───────── */
 
@@ -39,7 +39,7 @@ function setup() {
   if (!props.getProperty('SHEET_ID')) {
     const ss = SpreadsheetApp.create('桂馬會 棋手自助系統');
     ss.getSheets()[0].setName('Players')
-      .appendRow(['slug','email','guardian_email','status','created','updated','consent','pending_json','pending_photo']);
+      .appendRow(['slug','email','guardian_email','status','created','updated','consent','pending_json','pending_photo','real_name']);
     ss.insertSheet('Tokens').appendRow(['token','purpose','slug','expires','used']);
     ss.insertSheet('Log').appendRow(['time','slug','action','detail','prev_md']);
     props.setProperty('SHEET_ID', ss.getId());
@@ -59,7 +59,7 @@ function linkExistingPlayer(slug, email) {
   if (!ghGetText_('_players/' + slug + '.md')) throw new Error('找不到 _players/' + slug + '.md');
   const sh = sheet_('Players');
   if (findRow_(slug)) throw new Error(slug + ' 已經在名單裡');
-  sh.appendRow([slug, email.toLowerCase(), '', 'live', new Date(), new Date(), today_(), '', '']);
+  sh.appendRow([slug, email.toLowerCase(), '', 'live', new Date(), new Date(), today_(), '', '', '']);
   sendEditLinks_(email.toLowerCase());
   return '已寄出修改連結給 ' + email;
 }
@@ -116,6 +116,7 @@ function submitRegistration(f) {
   if (f.minor && (!isEmail_(guardian) || guardian === email)) throw new Error('未滿 18 歲請填寫法定代理人的 Email（不能和本人相同）。');
   if (!f.consent) throw new Error('請勾選同意公開。');
   const photo = cleanPhoto_(f.photo);
+  const realName = String(f.real_name || '').replace(/[\u0000-\u001F<>{}"]/g, '').trim().slice(0, 30);
 
   const done = '確認信已寄到 ' + email + '，請在 ' + CONFIG.LINK_HOURS + ' 小時內點信中的連結。沒收到的話，請看看垃圾郵件匣。';
   const lock = LockService.getScriptLock(); lock.waitLock(20000);
@@ -143,7 +144,7 @@ function submitRegistration(f) {
       throw new Error('網址代號「' + slug + '」已經有人使用，請換一個。');
     if (row) sh.deleteRow(row.index);
     sh.appendRow([slug, email, f.minor ? guardian : '', 'verifying', new Date(), new Date(), '',
-      JSON.stringify(d), photo || '']);
+      JSON.stringify(d), photo || '', realName]);
   } finally { lock.releaseLock(); }
 
   const link = tokenLink_('verify', slug, CONFIG.LINK_HOURS);
@@ -174,17 +175,18 @@ function submitEdit(token, f) {
   const old = parseMd_(prev);
 
   let photo = old.photo || '';
+  const changes = [];
   const newPhoto = cleanPhoto_(f.photo);
   if (newPhoto || f.removePhoto) {
-    if (photo) ghDelete_('assets/img/players/' + photo, '棋手自助更新：' + tk.slug + ' 更換照片');
+    if (photo) changes.push({ path: 'assets/img/players/' + photo, del: true });
     photo = '';
   }
   if (newPhoto) {
     photo = tk.slug + '-' + Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyyMMddHHmm') + '.jpg';
-    ghPut_('assets/img/players/' + photo, newPhoto, '棋手自助更新：' + tk.slug + ' 照片');
+    changes.push({ path: 'assets/img/players/' + photo, b64: newPhoto });
   }
-  const md = buildMd_(d, photo, old.honor_name, row.values[P.consent] || today_());
-  ghPut_(path, Utilities.base64Encode(md, Utilities.Charset.UTF_8), '棋手自助更新：' + tk.slug);
+  changes.push({ path: path, text: buildMd_(d, photo, old.honor_name, row.values[P.consent] || today_()) });
+  ghCommit_('棋手自助更新：' + tk.slug, changes);
   touch_(row, 'live');
   sheet_('Log').appendRow([new Date(), tk.slug, 'edit', newPhoto ? '含新照片' : (f.removePhoto ? '移除照片' : ''), prev]);
   const logRow = sheet_('Log').getLastRow();
@@ -209,8 +211,9 @@ function removeProfile(token) {
   const path = '_players/' + tk.slug + '.md';
   const prev = ghGetText_(path) || '';
   const old = parseMd_(prev);
-  if (old.photo) ghDelete_('assets/img/players/' + old.photo, '棋手下架：' + tk.slug);
-  ghDelete_(path, '棋手下架：' + tk.slug);
+  const changes = [{ path: path, del: true }];
+  if (old.photo) changes.push({ path: 'assets/img/players/' + old.photo, del: true });
+  ghCommit_('棋手下架：' + tk.slug, changes);
   useToken_(token, 'edit', true);
   touch_(row, 'removed');
   sheet_('Log').appendRow([new Date(), tk.slug, 'remove', '本人下架', prev]);
@@ -263,7 +266,7 @@ function handleToken_(token) {
     return msg_('謝謝您', '已收到您的同意。資料經主辦人確認後，就會刊登在棋手名鑑。');
   }
 
-  if (tk.purpose === 'approve' || tk.purpose === 'reject') {
+  if (tk.purpose === 'approve' || tk.purpose === 'approvehonor' || tk.purpose === 'reject') {
     if (status !== 'pending') return msg_('已經處理過', slug + ' 目前狀態是「' + status + '」。');
     useToken_(token, tk.purpose, true);
     if (tk.purpose === 'reject') {
@@ -272,8 +275,9 @@ function handleToken_(token) {
         '<p>這次的登錄沒有通過審核。想了解原因或重新登錄，請回信到 ' + CONFIG.ADMIN_EMAIL + '。</p>');
       return msg_('已退回', slug + ' 已退回，系統已通知本人。');
     }
-    publishNew_(row, d);
-    return msg_('已核准', slug + ' 已上線，約 1～2 分鐘後生效：' + CONFIG.SITE + '/players/' + slug + '/');
+    const honor = tk.purpose === 'approvehonor' ? String(row.values[P.real] || '') : '';
+    publishNew_(row, d, honor);
+    return msg_('已核准', (honor ? '已列入「' + honor + '」的優勝紀錄。' : '') + slug + ' 已上線，約 1～2 分鐘後生效：' + CONFIG.SITE + '/players/' + slug + '/');
   }
 
   if (tk.purpose === 'revert') {
@@ -293,9 +297,8 @@ function handleToken_(token) {
     const path = '_players/' + slug + '.md';
     const d2 = parseMd_(ghGetText_(path) || '');
     if (!d2.photo) return msg_('沒有照片', slug + ' 目前沒有照片。');
-    ghDelete_('assets/img/players/' + d2.photo, '主辦人移除照片：' + slug);
-    const md = buildMd_(d2, '', d2.honor_name, d2.consent || today_());
-    ghPut_(path, Utilities.base64Encode(md, Utilities.Charset.UTF_8), '主辦人移除照片：' + slug);
+    ghCommit_('主辦人移除照片：' + slug, [{ path: 'assets/img/players/' + d2.photo, del: true },
+      { path: path, text: buildMd_(d2, '', d2.honor_name, d2.consent || today_()) }]);
     useToken_(token, 'hidephoto', true);
     sheet_('Log').appendRow([new Date(), slug, 'hidephoto', '主辦人移除照片', '']);
     return msg_('已移除照片', slug + ' 的照片已移除。');
@@ -311,24 +314,27 @@ function afterConsent_(row, d) {
   const h = CONFIG.ADMIN_LINK_DAYS * 24;
   MailApp.sendEmail({ to: CONFIG.NOTIFY_EMAIL, subject: '【棋手自助】新登錄待核准：' + d.title,
     htmlBody: mailHtml_('新登錄：' + esc_(d.title), summary_(d, '') +
-      '<p>網址代號：' + slug + '<br>Email：' + esc_(row.values[P.email]) +
+      '<p>網址代號：' + slug + '<br>真實姓名（不公開）：' + esc_(row.values[P.real] || '未填') + '<br>Email：' + esc_(row.values[P.email]) +
       (row.values[P.guardian] ? '<br>法定代理人：' + esc_(row.values[P.guardian]) + '（已同意）' : '') + '</p>' +
       (photo ? '<p><img src="cid:p" width="120"></p>' : '') +
+      honorBlock_(slug, row.values[P.real], h) +
       button_(tokenLink_('approve', slug, h), '核准上線') + ' ' + button_(tokenLink_('reject', slug, h), '退回')),
     inlineImages: inline_(photo) });
   return msg_('Email 已確認', '謝謝！資料經主辦人確認後就會上線，屆時會寄信通知你。');
 }
 
-function publishNew_(row, d) {
+function publishNew_(row, d, honor) {
   const slug = row.values[P.slug];
   const photoB64 = row.values[P.photo];
   let photo = '';
+  const changes = [];
   if (photoB64) {
     photo = slug + '-' + Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyyMMddHHmm') + '.jpg';
-    ghPut_('assets/img/players/' + photo, photoB64, '新增棋手：' + slug + ' 照片');
+    changes.push({ path: 'assets/img/players/' + photo, b64: photoB64 });
   }
   const consent = today_();
-  ghPut_('_players/' + slug + '.md', Utilities.base64Encode(buildMd_(d, photo, '', consent), Utilities.Charset.UTF_8), '新增棋手：' + slug);
+  changes.push({ path: '_players/' + slug + '.md', text: buildMd_(d, photo, honor || '', consent) });
+  ghCommit_('新增棋手：' + slug, changes);
   const sh = sheet_('Players');
   sh.getRange(row.index, P.consent + 1).setValue(consent);
   sh.getRange(row.index, P.pending + 1, 1, 2).setValues([['', '']]);
@@ -407,6 +413,56 @@ function gh_(method, path, body) {
   let json = null; try { json = JSON.parse(r.getContentText()); } catch (e) {}
   return { code: r.getResponseCode(), json: json };
 }
+/** 把多個檔案的新增、修改、刪除合併成一次 commit（網站只重新建置一次） */
+function ghCommit_(message, changes) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const ref = ghApi_('get', 'git/ref/heads/' + CONFIG.BRANCH);
+    if (ref.code !== 200) throw new Error('讀取 GitHub 分支失敗（' + ref.code + '）');
+    const head = ref.json.object.sha;
+    const base = ghApi_('get', 'git/commits/' + head).json.tree.sha;
+    const tree = changes.map(c => {
+      if (c.del) return { path: c.path, mode: '100644', type: 'blob', sha: null };
+      if (c.b64) {
+        const b = ghApi_('post', 'git/blobs', { content: c.b64, encoding: 'base64' });
+        if (b.code >= 300) throw new Error('上傳檔案失敗（' + b.code + '）：' + c.path);
+        return { path: c.path, mode: '100644', type: 'blob', sha: b.json.sha };
+      }
+      return { path: c.path, mode: '100644', type: 'blob', content: c.text };
+    });
+    const t = ghApi_('post', 'git/trees', { base_tree: base, tree: tree });
+    if (t.code >= 300) throw new Error('建立檔案樹失敗（' + t.code + '）');
+    const cm = ghApi_('post', 'git/commits', { message: message, tree: t.json.sha, parents: [head] });
+    if (cm.code >= 300) throw new Error('建立 commit 失敗（' + cm.code + '）');
+    const up = ghApi_('patch', 'git/refs/heads/' + CONFIG.BRANCH, { sha: cm.json.sha });
+    if (up.code < 300) return;
+    if (up.code !== 422) throw new Error('更新分支失敗（' + up.code + '）');
+    Utilities.sleep(1500); // 同時有其他推送：重試
+  }
+  throw new Error('GitHub 忙碌中，請稍後再試。');
+}
+function ghApi_(method, endpoint, body) {
+  const token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
+  const opt = { method: method, muteHttpExceptions: true,
+    headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } };
+  if (body) { opt.contentType = 'application/json'; opt.payload = JSON.stringify(body); }
+  const r = UrlFetchApp.fetch('https://api.github.com/repos/' + CONFIG.OWNER + '/' + CONFIG.REPO + '/' + endpoint, opt);
+  let json = null; try { json = JSON.parse(r.getContentText()); } catch (e) {}
+  return { code: r.getResponseCode(), json: json };
+}
+
+/** 真實姓名和 _data/titles.yml 的優勝者完全相同時，在核准信中提供「核准並列入優勝紀錄」 */
+function honorBlock_(slug, realName, hours) {
+  if (!realName) return '';
+  const yml = ghGetText_('_data/titles.yml') || '';
+  const names = {};
+  const re = /\b(?:winner|name|spring|summer|autumn|winter):\s*([^,}\n#]+)/g;
+  let m; while ((m = re.exec(yml))) names[m[1].trim().replace(/^["']|["']$/g, '')] = true;
+  if (!names[realName]) return '';
+  return '<p style="padding:10px 12px;background:#FBF3E4;border-left:4px solid #B08D45">真實姓名「' + esc_(realName) +
+    '」和「棋戰與歷屆優勝」名單上的名字相同。確認是本人的話，按「核准並列入優勝紀錄」，棋手頁會自動顯示他的優勝紀錄。</p>' +
+    button_(tokenLink_('approvehonor', slug, hours), '核准並列入優勝紀錄') + ' ';
+}
+
 function ghGetSha_(path) { const r = gh_('get', path); return r.code === 200 ? r.json.sha : null; }
 function ghGetText_(path) {
   const r = gh_('get', path);

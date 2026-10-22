@@ -105,7 +105,7 @@ function form(edit,d){
   let years='';for(let y=B.year;y>=1990;y--)years+=`<option${String(p.since)===String(y)?' selected':''}>${y}</option>`;
   return `
   <h1>${edit?'修改我的資料':'登錄棋手名鑑'}</h1>
-  <p class="lead">${edit?'修改後按「儲存修改」，約 1～2 分鐘後棋手頁就會更新。':'只有你填寫的內容會公開。Email 不會公開，只用來寄確認信和修改連結。'}</p>
+  <p class="lead">${edit?'修改後按「儲存修改」，約 1～2 分鐘後棋手頁就會更新。':'「公開資料」會顯示在棋手頁；真實姓名和 Email 不會公開。'}</p>
 
   <h2>公開資料</h2>
   <label class="f" for="title">顯示名稱<small>必填，本名或暱稱，20 字內</small></label>
@@ -133,6 +133,9 @@ function form(edit,d){
   <label class="f" for="slug">網址代號<small>必填，英文小寫和連字號，之後不能更改</small></label>
   <input type="text" id="slug" maxlength="40" placeholder="wang-xiaoming" autocapitalize="off" spellcheck="false">
   <p class="hint">你的棋手頁會是 ${h(B.site)}/players/<b id="slugpv">wang-xiaoming</b>/</p>
+  <label class="f" for="real">真實姓名<small>選填，不公開</small></label>
+  <input type="text" id="real" maxlength="30" autocomplete="name">
+  <p class="hint">只用來比對龍馬盃等比賽的優勝紀錄和棋譜。比賽時用本名報名的話，填了才能把成績連到你的棋手頁。</p>
   <label class="f" for="email">Email<small>必填，不公開</small></label>
   <input type="email" id="email" autocomplete="email">
   <label class="check"><input type="checkbox" id="minor"><span>我未滿 18 歲</span></label>
@@ -202,6 +205,7 @@ function wire(edit,d){
     const f=collect();
     if(edit) return run('submitEdit',[d.token,f],e.target,r=>go('msg',{title:'已儲存',text:r.text+' '+r.url}));
     Object.assign(f,{slug:document.getElementById('slug').value,email:document.getElementById('email').value,
+      real_name:document.getElementById('real').value,
       minor:document.getElementById('minor').checked,guardian:document.getElementById('guardian').value,
       consent:document.getElementById('consent').checked});
     run('submitRegistration',[f],e.target,msg=>go('msg',{title:'請收信確認',text:msg}));
