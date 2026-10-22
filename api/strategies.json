@@ -1,0 +1,13 @@
+---
+layout: null
+permalink: /api/strategies.json
+sitemap: false
+---
+[{%- assign first = true -%}
+{%- for c in site.data.strategy_categories -%}
+{%- assign list = site.strategies | where: "category", c.name | sort: "order" -%}
+{%- for s in list -%}
+{%- unless first %},{% endunless -%}{%- assign first = false -%}
+{"slug":{{ s.url | split: "/" | last | jsonify }},"title":{{ s.title | jsonify }},"category":{{ c.name | jsonify }}}
+{%- endfor -%}
+{%- endfor -%}]

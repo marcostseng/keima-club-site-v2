@@ -43,4 +43,5 @@ defaults:
 
 exclude:
   - README.md
+  - apps-script
   - preview

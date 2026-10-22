@@ -9,6 +9,7 @@ zh:
   materials: ""   # 會員教材資料夾
   line: "https://line.me/ti/g2/umjemRRHOVe_bmcgrJ4N6sd3EMjlMPZqQQ7HbQ"   # LINE 社群「桂馬會日本將棋交流群」
   contact: ""     # 聯絡表單（目前未使用）
+  player_portal: ""   # 棋手自助系統：Apps Script 網頁應用程式網址（結尾 /exec）
 ja:
   meetup: ""      # 例会 申込フォーム
   ryuma: "https://docs.google.com/forms/d/e/1FAIpQLSesLByegTLurKhdbVR4-pviH7A36CBhAfleA8cHF3S_vKQsGw/viewform"       # 龍馬盃 申込ページ

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--kon:#1E2A4A;--bengara:#A3320B;--washi:#F5F0E6;--paper:#FBF8F2;--ink:#2B2320;--muted:#5E5049;--line:rgba(90,59,42,.22);--ok:#23502F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--washi);color:var(--ink);font:16px/1.75 "Noto Sans TC",system-ui,sans-serif}
+header{background:var(--kon);color:var(--washi);border-bottom:1px solid rgba(176,141,69,.45)}
+header .in{max-width:640px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+header a{color:#D9C08A;text-decoration:none;font-size:14px}
+.brand{font-family:"Noto Serif TC",serif;font-weight:900;letter-spacing:.08em}
+main{max-width:640px;margin:0 auto;padding:32px 20px 64px}
+h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:30px;line-height:1.35;margin:0 0 12px;color:var(--kon)}
+h2{font-family:"Noto Serif TC",serif;font-size:19px;margin:36px 0 12px;padding-left:12px;border-left:4px solid var(--bengara);color:var(--kon)}
+p{margin:0 0 14px}
+.lead{color:var(--muted)}
+.choices{display:grid;gap:14px;margin-top:24px}
+.choice{display:block;padding:20px 22px;background:var(--paper);border:1px solid var(--line);color:var(--ink);text-decoration:none;cursor:pointer;text-align:left;font:inherit;width:100%}
+.choice b{display:block;font-size:18px;color:var(--kon)}
+.choice span{color:var(--muted);font-size:14px}
+.choice:hover,.choice:focus-visible{border-color:var(--bengara)}
+label.f{display:block;margin:18px 0 6px;font-weight:700}
+label.f small{font-weight:400;color:var(--muted);margin-left:6px}
+.hint{font-size:13px;color:var(--muted);margin:4px 0 0}
+input[type=text],input[type=email],select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);background:#fff;font:inherit;color:inherit;border-radius:0}
+textarea{min-height:120px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible,.chip:focus-within{outline:2px solid var(--bengara);outline-offset:1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row2 label.f{margin-top:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.cat{font-size:13px;color:var(--muted);margin:10px 0 6px;width:100%}
+.chip{position:relative;display:inline-flex}
+.chip input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.chip span{padding:6px 12px;border:1px solid var(--line);background:#fff;font-size:14px}
+.chip input:checked+span{background:var(--kon);border-color:var(--kon);color:var(--washi)}
+.photo{display:flex;gap:16px;align-items:center}
+.photo .pv{width:84px;height:100px;background:#ECE4D4;flex:none;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;overflow:hidden}
+.photo .pv img{width:100%;height:100%;object-fit:cover}
+.check{display:flex;gap:10px;align-items:flex-start;margin:16px 0 0}
+.check input{margin-top:6px;width:18px;height:18px;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 26px;border:0;background:var(--bengara);color:#fff;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+.btn:disabled{opacity:.55;cursor:wait}
+.btn.ghost{background:transparent;color:var(--kon);border:1px solid var(--kon)}
+.btn.danger{background:transparent;color:var(--bengara);border:1px solid var(--bengara)}
+.actions{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap}
+.notice{padding:14px 16px;margin:20px 0 0;background:var(--paper);border-left:4px solid var(--ok)}
+.notice.err{border-left-color:var(--bengara);color:var(--bengara)}
+.zone{margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.counter{float:right;font-weight:400;font-size:13px;color:var(--muted)}
+[hidden]{display:none!important}
+@media (max-width:520px){.row2{grid-template-columns:1fr}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<header><div class="in"><span class="brand">桂馬會・棋手名鑑</span><a id="siteLink" href="#">回到網站</a></div></header>
+<main id="app"></main>
+
+<script>
+const B = <?!= boot ?>;
+const app = document.getElementById('app');
+document.getElementById('siteLink').href = B.site + '/players/';
+let STRATS = [];
+
+function h(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function go(view,data){B.view=view;B.data=data||{};render();window.scrollTo(0,0);}
+function run(fn,args,btn,ok){
+  const box=document.getElementById('note');
+  if(btn){btn.disabled=true;btn.dataset.t=btn.textContent;btn.textContent='處理中…';}
+  google.script.run.withSuccessHandler(r=>{if(btn){btn.disabled=false;btn.textContent=btn.dataset.t;}ok(r);})
+    .withFailureHandler(e=>{if(btn){btn.disabled=false;btn.textContent=btn.dataset.t;}
+      box.hidden=false;box.className='notice err';box.textContent=(e&&e.message||'發生錯誤').replace(/^Error:\s*/,'');})[fn](...args);
+}
+
+function render(){
+  const v=B.view,d=B.data;
+  if(v==='home') app.innerHTML=`
+    <h1>棋手名鑑</h1>
+    <p class="lead">參加過桂馬會例會或棋戰的棋友，都可以在這裡建立自己的棋手頁，之後也能隨時自己修改或下架。</p>
+    <div class="choices">
+      <button class="choice" onclick="go('register')"><b>登錄棋手名鑑</b><span>第一次建立棋手頁</span></button>
+      <button class="choice" onclick="go('request')"><b>修改或下架我的資料</b><span>輸入登錄時的 Email，收取修改連結</span></button>
+    </div>`;
+  else if(v==='request') app.innerHTML=`
+    <h1>修改我的資料</h1>
+    <p class="lead">輸入登錄時填寫的 Email，我們會寄一個修改連結給你，點連結就能修改或下架。</p>
+    <label class="f" for="em">Email</label><input type="email" id="em" autocomplete="email">
+    <div class="actions"><button class="btn" id="go">寄修改連結</button><button class="btn ghost" onclick="go('home')">返回</button></div>
+    <div id="note" hidden></div>`;
+  else if(v==='msg') app.innerHTML=`<h1>${h(d.title)}</h1><p class="lead">${h(d.text)}</p>
+    <div class="actions"><a class="btn ghost" href="${B.site}/players/">回到棋手名鑑</a></div>`;
+  else app.innerHTML=form(v==='edit',d);
+
+  if(v==='request') document.getElementById('go').onclick=e=>run('requestEditLink',[document.getElementById('em').value],e.target,
+    msg=>{const n=document.getElementById('note');n.hidden=false;n.className='notice';n.textContent=msg;});
+  if(v==='register'||v==='edit') wire(v==='edit',d);
+}
+
+function form(edit,d){
+  const p=(d&&d.profile)||{};
+  const ranks=B.ranks.map(r=>`<option${p.rank===r?' selected':''}>${r}</option>`).join('');
+  let years='';for(let y=B.year;y>=1990;y--)years+=`<option${String(p.since)===String(y)?' selected':''}>${y}</option>`;
+  return `
+  <h1>${edit?'修改我的資料':'登錄棋手名鑑'}</h1>
+  <p class="lead">${edit?'修改後按「儲存修改」，約 1～2 分鐘後棋手頁就會更新。':'只有你填寫的內容會公開。Email 不會公開，只用來寄確認信和修改連結。'}</p>
+
+  <h2>公開資料</h2>
+  <label class="f" for="title">顯示名稱<small>必填，本名或暱稱，20 字內</small></label>
+  <input type="text" id="title" maxlength="20" value="${h(p.title)}">
+  <label class="f" for="alt">英文或日文名稱<small>選填</small></label>
+  <input type="text" id="alt" maxlength="40" value="${h(p.alt_name)}" placeholder="例如 Wang Xiaoming">
+  <div class="row2">
+    <div><label class="f" for="rank">段級位<small>選填</small></label><select id="rank"><option value="">不公開</option>${ranks}</select></div>
+    <div><label class="f" for="since">首次參加桂馬會活動<small>選填</small></label><select id="since"><option value="">不公開</option>${years}</select></div>
+  </div>
+  <label class="f">常用戰法<small>選填，最多 ${B.maxStyles} 個</small></label>
+  <div class="chips" id="styles"><span class="hint">載入戰法清單中…</span></div>
+  <label class="f" for="bio">個人簡介<small>選填</small><span class="counter" id="cnt"></span></label>
+  <textarea id="bio" maxlength="${B.maxBio}" placeholder="例如：喜歡下四間飛車，週四例會常出現。">${h(p.bio)}</textarea>
+  <label class="f">大頭照<small>選填，會裁切成直式</small></label>
+  <div class="photo">
+    <div class="pv" id="pv">${d.photoUrl?`<img src="${h(d.photoUrl)}" alt="">`:'沒有照片'}</div>
+    <div><input type="file" id="file" accept="image/*">
+      ${edit&&d.photoUrl?'<label class="check" style="margin-top:8px"><input type="checkbox" id="rmphoto"><span>移除照片</span></label>':''}
+      <p class="hint">請用本人照片；畫面中有其他人時，請先取得對方同意。</p></div>
+  </div>
+
+  ${edit?'':`
+  <h2>帳號資料</h2>
+  <label class="f" for="slug">網址代號<small>必填，英文小寫和連字號，之後不能更改</small></label>
+  <input type="text" id="slug" maxlength="40" placeholder="wang-xiaoming" autocapitalize="off" spellcheck="false">
+  <p class="hint">你的棋手頁會是 ${h(B.site)}/players/<b id="slugpv">wang-xiaoming</b>/</p>
+  <label class="f" for="email">Email<small>必填，不公開</small></label>
+  <input type="email" id="email" autocomplete="email">
+  <label class="check"><input type="checkbox" id="minor"><span>我未滿 18 歲</span></label>
+  <div id="gbox" hidden><label class="f" for="guardian">法定代理人的 Email<small>需要家長或監護人同意後才會公開</small></label><input type="email" id="guardian"></div>
+  <label class="check"><input type="checkbox" id="consent"><span>我同意以上公開資料刊登在桂馬會網站，之後可以隨時自己修改或下架。</span></label>`}
+
+  <div class="actions"><button class="btn" id="save">${edit?'儲存修改':'送出登錄'}</button>
+    ${edit?'':`<button class="btn ghost" onclick="go('home')">返回</button>`}</div>
+  <div id="note" hidden></div>
+
+  ${edit?`<div class="zone"><h2 style="margin-top:0">下架我的資料</h2>
+    <p class="hint" style="margin-bottom:14px">會刪除你的棋手頁和照片。對局紀錄中的名字會由主辦人改成不具名。</p>
+    <button class="btn danger" id="del">下架我的資料</button></div>`:''}`;
+}
+
+function wire(edit,d){
+  const p=(d&&d.profile)||{}, picked=new Set(p.styles||[]);
+  let photo='';
+  const bio=document.getElementById('bio'),cnt=document.getElementById('cnt');
+  const upd=()=>cnt.textContent=bio.value.length+' / '+B.maxBio; bio.oninput=upd; upd();
+
+  const drawStyles=()=>{
+    const box=document.getElementById('styles');
+    if(!STRATS.length){box.innerHTML='<span class="hint">目前無法載入戰法清單，可以之後再補。</span>';return;}
+    let html='',cat='';
+    STRATS.forEach(s=>{ if(s.category!==cat){cat=s.category;html+=`<div class="cat">${h(cat)}</div>`;}
+      html+=`<label class="chip"><input type="checkbox" value="${h(s.slug)}"${picked.has(s.slug)?' checked':''}><span>${h(s.title)}</span></label>`;});
+    box.innerHTML=html;
+    box.querySelectorAll('input').forEach(i=>i.onchange=()=>{
+      if(i.checked&&box.querySelectorAll('input:checked').length>B.maxStyles){i.checked=false;alert('最多選 '+B.maxStyles+' 個');}});
+  };
+  if(STRATS.length) drawStyles(); else google.script.run.withSuccessHandler(l=>{STRATS=l||[];drawStyles();}).withFailureHandler(()=>drawStyles()).getStrategies();
+
+  document.getElementById('file').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const img=new Image(), url=URL.createObjectURL(f);
+    img.onload=()=>{
+      const W=240,H=288,c=document.createElement('canvas');c.width=W;c.height=H;
+      const s=Math.max(W/img.width,H/img.height),w=img.width*s,hh=img.height*s;
+      c.getContext('2d').drawImage(img,(W-w)/2,(H-hh)/2,w,hh);
+      let q=.86,out;do{out=c.toDataURL('image/jpeg',q);q-=.08;}while(out.length>45000&&q>.3);
+      photo=out.split(',')[1];
+      document.getElementById('pv').innerHTML=`<img src="${out}" alt="">`;
+      const rm=document.getElementById('rmphoto'); if(rm) rm.checked=false;
+      URL.revokeObjectURL(url);
+    };
+    img.onerror=()=>alert('無法讀取這張圖片，請換一張。');
+    img.src=url;
+  };
+
+  if(!edit){
+    const slug=document.getElementById('slug'),alt=document.getElementById('alt'),pv=document.getElementById('slugpv');
+    let touched=false;
+    const mk=v=>v.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40);
+    alt.addEventListener('input',()=>{if(!touched){slug.value=mk(alt.value);pv.textContent=slug.value||'wang-xiaoming';}});
+    slug.oninput=()=>{touched=true;slug.value=slug.value.toLowerCase();pv.textContent=slug.value||'wang-xiaoming';};
+    document.getElementById('minor').onchange=e=>document.getElementById('gbox').hidden=!e.target.checked;
+  }
+
+  const collect=()=>({
+    title:document.getElementById('title').value, alt_name:document.getElementById('alt').value,
+    rank:document.getElementById('rank').value, since:document.getElementById('since').value,
+    styles:[...document.querySelectorAll('#styles input:checked')].map(i=>i.value),
+    bio:bio.value, photo:photo, removePhoto:!!(document.getElementById('rmphoto')||{}).checked });
+
+  document.getElementById('save').onclick=e=>{
+    const f=collect();
+    if(edit) return run('submitEdit',[d.token,f],e.target,r=>go('msg',{title:'已儲存',text:r.text+' '+r.url}));
+    Object.assign(f,{slug:document.getElementById('slug').value,email:document.getElementById('email').value,
+      minor:document.getElementById('minor').checked,guardian:document.getElementById('guardian').value,
+      consent:document.getElementById('consent').checked});
+    run('submitRegistration',[f],e.target,msg=>go('msg',{title:'請收信確認',text:msg}));
+  };
+  const del=document.getElementById('del');
+  if(del) del.onclick=e=>{ if(confirm('確定要下架嗎？棋手頁和照片會被刪除。'))
+    run('removeProfile',[d.token],e.target,msg=>go('msg',{title:'已下架',text:msg})); };
+}
+
+render();
+</script>
+</body>
+</html>

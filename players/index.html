@@ -26,9 +26,17 @@ permalink: /players/
     <p class="db-empty">棋手名鑑準備中。</p>
     {%- endif %}
     <div class="cta-box">
+      {%- assign portal = site.data.links.zh.player_portal %}
       <h2>登錄棋手名鑑</h2>
-      <p>參加過桂馬會例會或棋戰的棋友都可以登錄。請來信告訴我們想公開的名稱與段級位，資料經本人同意後刊登。</p>
-      <a class="btn btn-primary" href="mailto:admin@keima.club?subject=%E7%99%BB%E9%8C%84%E6%A3%8B%E5%A3%AB%E5%90%8D%E9%91%91">來信登錄</a>
+      <p>參加過桂馬會例會或棋戰的棋友都可以登錄。名稱、段級位、常用戰法、簡介和照片都由你自己填寫，之後也能隨時自己修改或下架。</p>
+      {%- if portal and portal != "" %}
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{ portal }}?p=register" target="_blank" rel="noopener">登錄棋手名鑑</a>
+        <a class="btn btn-ghost" href="{{ portal }}?p=edit" target="_blank" rel="noopener">修改我的資料</a>
+      </div>
+      {%- else %}
+      <a class="btn btn-primary" href="mailto:admin@keima.club?subject=%E7%99%BB%E9%8C%84%E6%A3%8B%E6%89%8B%E5%90%8D%E9%91%91">來信登錄</a>
+      {%- endif %}
     </div>
   </div>
 </section>

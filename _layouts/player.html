@@ -72,7 +72,8 @@ layout: base
       {%- if bio != "" %}
       <div class="db-box"><h3>個人簡介</h3>{{ content }}</div>
       {%- endif %}
-      <p class="db-note" style="margin-top:20px">本頁資料經本人同意刊登。如需修改或下架，請來信 <a href="mailto:admin@keima.club">admin@keima.club</a>。</p>
+      {%- assign portal = site.data.links.zh.player_portal %}
+      <p class="db-note" style="margin-top:20px">本頁資料由本人提供並同意刊登。{% if portal and portal != "" %}本人可以到<a href="{{ portal }}?p=edit" target="_blank" rel="noopener">修改我的資料</a>自行修改或下架。{% else %}如需修改或下架，請來信 <a href="mailto:admin@keima.club">admin@keima.club</a>。{% endif %}</p>
     </aside>
   </div></div>
 </section>

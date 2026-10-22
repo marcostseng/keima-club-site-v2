@@ -52,7 +52,7 @@
 |---|---|
 | 新增戰法 | `_strategies/`，參考 `shikenbisha.md`；分類名稱要和 `_data/strategy_categories.yml` 一致 |
 | 新增棋譜 | KIF 檔放 `assets/kifu/games/年份/`，再複製 `_games/example-game.md` 改內容 |
-| 新增棋手 | **先取得本人同意**，再複製 `_players/example-player.md`；大頭照放 `assets/img/players/` |
+| 新增棋手 | 由本人透過棋手自助系統登錄（`apps-script/player-portal/`），主辦人收信一鍵核准；手動新增時仍需先取得本人同意，再複製 `_players/example-player.md` |
 
 - 檔名一律英文小寫加連字號，例如 `ryuma-2026-dan-r1-01.md`、`wang-xiaoming.md`；網址就是檔名
 - 棋譜檔的 `sente_id`／`gote_id` 填棋手的檔名（不含 .md），棋手頁就會自動列出對局
