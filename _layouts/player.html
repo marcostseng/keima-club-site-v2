@@ -5,8 +5,9 @@ layout: base
 {%- assign games_s = site.games | where: "sente_id", pid -%}
 {%- assign games_g = site.games | where: "gote_id", pid -%}
 {%- assign games = games_s | concat: games_g | sort: "date" | reverse -%}
-{%- assign hn = page.honor_name | default: page.title -%}
-{%- capture honors -%}
+{%- comment -%}優勝紀錄比對：自助管理的棋手只用主辦人填的 honor_name（避免改名冒用）；手動建立的棋手頁沿用顯示名稱{%- endcomment -%}
+{%- if page.self_managed -%}{%- assign hn = page.honor_name -%}{%- else -%}{%- assign hn = page.honor_name | default: page.title -%}{%- endif -%}
+{%- capture honors -%}{%- if hn and hn != "" -%}
 {%- for ti in site.data.titles -%}
   {%- for r in ti.results -%}
     {%- if r.winner and r.winner == hn -%}<li><span class="yr">{{ r.year }}</span><span class="ed">第{{ r.ed }}屆</span><span class="who">{{ ti.name.zh }}<small>優勝</small></span></li>{%- endif -%}
@@ -19,7 +20,7 @@ layout: base
     {%- if s.winter == hn -%}<li><span class="yr">{{ s.year }}</span><span class="ed">冬</span><span class="who">{{ ti.name.zh }}<small>優勝</small></span></li>{%- endif -%}
   {%- endfor -%}
 {%- endfor -%}
-{%- endcapture -%}
+{%- endif -%}{%- endcapture -%}
 <section class="hero page-hero" style="padding:0">
   <div class="wrap"><div>
     {% include db-crumb.html url="/players/" label="棋手名鑑" %}
@@ -68,7 +69,7 @@ layout: base
     </div>
     <aside>
       {%- if page.styles %}
-      <div class="db-box"><h3>常用戰法</h3><div class="tags">{% for s in page.styles %}{% assign u = "/strategies/" | append: s | append: "/" %}{% assign d = site.strategies | where: "url", u | first %}{% if d %}<a class="tag" href="{{ d.url }}">{{ d.title }}</a>{% else %}<span class="tag">{{ s }}</span>{% endif %}{% endfor %}</div></div>
+      <div class="db-box"><h3>常用戰法</h3><div class="tags">{% for s in page.styles %}{% assign u = "/strategies/" | append: s | append: "/" %}{% assign d = site.strategies | where: "url", u | first %}{% unless d %}{% assign d = site.strategies | where: "title", s | first %}{% endunless %}{% if d %}<a class="tag" href="{{ d.url }}">{{ d.title }}</a>{% else %}<span class="tag">{{ s }}</span>{% endif %}{% endfor %}</div></div>
       {%- endif %}
       {%- assign bio = content | strip -%}
       {%- if bio != "" %}

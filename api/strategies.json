@@ -8,6 +8,6 @@ sitemap: false
 {%- assign list = site.strategies | where: "category", c.name | sort: "order" -%}
 {%- for s in list -%}
 {%- unless first %},{% endunless -%}{%- assign first = false -%}
-{"slug":{{ s.url | split: "/" | last | jsonify }},"title":{{ s.title | jsonify }},"category":{{ c.name | jsonify }}}
+{"slug":{{ s.url | split: "/" | last | jsonify }},"title":{{ s.title | jsonify }},"ja":{{ s.ja | jsonify }},"category":{{ c.name | jsonify }}}
 {%- endfor -%}
 {%- endfor -%}]

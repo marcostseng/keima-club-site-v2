@@ -140,7 +140,9 @@ function submitRegistration(f) {
     const row = findRow_(slug);
     const stale = row && row.values[P.status] === 'verifying' &&
       new Date(row.values[P.created]).getTime() < Date.now() - CONFIG.LINK_HOURS * 3600e3;
-    if ((row && !stale && ['rejected','removed'].indexOf(row.values[P.status]) < 0) || ghGetText_('_players/' + slug + '.md'))
+    // 下架過的代號保留給原本的 Email（避免別人接手代號，連到他人的棋譜）
+    const reservedByOther = row && row.values[P.status] === 'removed' && row.values[P.email] !== email;
+    if ((row && !stale && ['rejected','removed'].indexOf(row.values[P.status]) < 0) || reservedByOther || ghGetText_('_players/' + slug + '.md'))
       throw new Error('網址代號「' + slug + '」已經有人使用，請換一個。');
     if (row) sh.deleteRow(row.index);
     sh.appendRow([slug, email, f.minor ? guardian : '', 'verifying', new Date(), new Date(), '',
@@ -355,8 +357,16 @@ function clean_(f) {
   const rank = RANKS.indexOf(f.rank) >= 0 ? f.rank : '';
   const y = Number(f.since), now = new Date().getFullYear();
   const since = y >= 1990 && y <= now ? y : '';
-  const valid = getStrategies().map(s => s.slug);
-  const styles = (Array.isArray(f.styles) ? f.styles : []).filter(s => valid.indexOf(s) >= 0).slice(0, CONFIG.MAX_STYLES);
+  const strats = getStrategies(), valid = strats.map(s => s.slug);
+  const styles = (Array.isArray(f.styles) ? f.styles : []).filter(s => valid.indexOf(s) >= 0);
+  // 自行輸入的戰法：名稱和戰法頁相同時換成戰法頁代號，其他保留文字（之後建立戰法頁會自動連結）
+  String(f.custom_styles || '').split(/[、,，;；\/\n]+/).map(x => txt(x, 12).replace(/\n/g, '').replace(/["'\[\]]/g, ''))
+    .filter(Boolean).slice(0, 3).forEach(name => {
+      const hit = strats.filter(s => s.title === name || s.ja === name)[0];
+      const v = hit ? hit.slug : name;
+      if (styles.indexOf(v) < 0) styles.push(v);
+    });
+  styles.splice(CONFIG.MAX_STYLES);
   const bio = txt(f.bio, CONFIG.MAX_BIO).replace(/^\s*-{3,}\s*$/gm, '').replace(/\n{3,}/g, '\n\n').trim();
   return { title: title, alt_name: txt(f.alt_name, 40).replace(/\n/g, ''), rank: rank, since: since, styles: styles, bio: bio };
 }

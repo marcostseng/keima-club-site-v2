@@ -118,6 +118,8 @@ function form(edit,d){
   </div>
   <label class="f">常用戰法<small>選填，最多 ${B.maxStyles} 個</small></label>
   <div class="chips" id="styles"><span class="hint">載入戰法清單中…</span></div>
+  <label class="f" for="cstyles" style="margin-top:14px">清單裡沒有的戰法<small>選填，最多 3 個，用頓號分隔</small></label>
+  <input type="text" id="cstyles" maxlength="40" placeholder="例如：鬼殺、右玉">
   <label class="f" for="bio">個人簡介<small>選填</small><span class="counter" id="cnt"></span></label>
   <textarea id="bio" maxlength="${B.maxBio}" placeholder="例如：喜歡下四間飛車，週四例會常出現。">${h(p.bio)}</textarea>
   <label class="f">大頭照<small>選填，會裁切成直式</small></label>
@@ -159,11 +161,13 @@ function wire(edit,d){
 
   const drawStyles=()=>{
     const box=document.getElementById('styles');
-    if(!STRATS.length){box.innerHTML='<span class="hint">目前無法載入戰法清單，可以之後再補。</span>';return;}
+    if(!STRATS.length){box.innerHTML='<span class="hint">目前無法載入戰法清單，可以在下方直接輸入。</span>';return;}
     let html='',cat='';
     STRATS.forEach(s=>{ if(s.category!==cat){cat=s.category;html+=`<div class="cat">${h(cat)}</div>`;}
       html+=`<label class="chip"><input type="checkbox" value="${h(s.slug)}"${picked.has(s.slug)?' checked':''}><span>${h(s.title)}</span></label>`;});
     box.innerHTML=html;
+    const known=new Set(STRATS.map(x=>x.slug)), cs=document.getElementById('cstyles');
+    if(cs&&!cs.value) cs.value=(p.styles||[]).filter(x=>!known.has(x)).join('、');
     box.querySelectorAll('input').forEach(i=>i.onchange=()=>{
       if(i.checked&&box.querySelectorAll('input:checked').length>B.maxStyles){i.checked=false;alert('最多選 '+B.maxStyles+' 個');}});
   };
@@ -199,6 +203,7 @@ function wire(edit,d){
     title:document.getElementById('title').value, alt_name:document.getElementById('alt').value,
     rank:document.getElementById('rank').value, since:document.getElementById('since').value,
     styles:[...document.querySelectorAll('#styles input:checked')].map(i=>i.value),
+    custom_styles:(document.getElementById('cstyles')||{}).value||'',
     bio:bio.value, photo:photo, removePhoto:!!(document.getElementById('rmphoto')||{}).checked });
 
   document.getElementById('save').onclick=e=>{
