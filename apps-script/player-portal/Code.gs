@@ -89,7 +89,7 @@ function page_(view, data) {
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
-function msg_(title, text) { return page_('msg', { title: title, text: text }); }
+function msg_(title, text, flow, step) { return page_('msg', { title: title, text: text, flow: flow || '', step: step || 0 }); }
 
 /* ───────── 前端呼叫 ───────── */
 
@@ -118,7 +118,7 @@ function submitRegistration(f) {
   const photo = cleanPhoto_(f.photo);
   const realName = String(f.real_name || '').replace(/[\u0000-\u001F<>{}"]/g, '').trim().slice(0, 30);
 
-  const done = '確認信已寄到 ' + email + '，請在 ' + CONFIG.LINK_HOURS + ' 小時內點信中的連結。沒收到的話，請看看垃圾郵件匣。';
+  const done = '確認信已寄到 ' + email + '。請在 ' + CONFIG.LINK_HOURS + ' 小時內點信中的「確認 Email」，沒有確認的話，登錄不會送出審核。沒收到信請先看垃圾郵件匣，不需要重新填寫表單。';
   const lock = LockService.getScriptLock(); lock.waitLock(20000);
   try {
     const sh = sheet_('Players');
@@ -151,7 +151,7 @@ function submitRegistration(f) {
 
   const link = tokenLink_('verify', slug, CONFIG.LINK_HOURS);
   MailApp.sendEmail({ to: email, subject: '【桂馬會】請確認你的棋手名鑑登錄',
-    htmlBody: mailHtml_('確認你的 Email', '<p>你剛才在桂馬會棋手名鑑登錄了「' + esc_(d.title) + '」。請按下方按鈕確認這是你的 Email：</p>' +
+    htmlBody: mailHtml_('確認你的 Email', '<p>你剛才在桂馬會棋手名鑑登錄了「' + esc_(d.title) + '」。請按下方按鈕確認這是你的 Email。<b>按下確認後才會送出審核</b>，審核約需 1～2 個工作天，上線時會再寄信通知你。</p>' +
       button_(link, '確認 Email') + '<p style="color:#666;font-size:13px">連結 ' + CONFIG.LINK_HOURS + ' 小時內有效。如果不是你本人操作，請忽略這封信。</p>') });
   return done;
 }
@@ -203,7 +203,7 @@ function submitEdit(token, f) {
     inlineImages: inline_(newPhoto) });
   notifyPlayer_(row, '【桂馬會】你的棋手資料已更新',
     '<p>你的棋手頁已更新，約 1～2 分鐘後就能看到：</p><p><a href="' + url + '">' + url + '</a></p>');
-  return { text: '已儲存。約 1～2 分鐘後，棋手頁會顯示新的資料。', url: url };
+  return { text: '修改不需要審核，約 1～2 分鐘後棋手頁就會更新。沒看到新資料的話，請重新整理頁面，不需要再儲存一次。', url: url };
 }
 
 function removeProfile(token) {
@@ -256,7 +256,7 @@ function handleToken_(token) {
         htmlBody: mailHtml_('法定代理人同意', '<p>您好，' + esc_(d.title) + ' 在桂馬會日本將棋俱樂部的「棋手名鑑」登錄了以下資料，並填寫您為法定代理人。資料公開在網站上前，需要您的同意：</p>' +
           summary_(d, '') + '<p>同意的話請按下方按鈕；不同意請忽略這封信，資料不會公開。之後孩子修改或下架資料時，您也會收到通知。</p>' +
           button_(link, '我同意公開') + '<p style="color:#666;font-size:13px">連結 7 天內有效。有任何問題請回信到 ' + CONFIG.ADMIN_EMAIL + '。</p>') });
-      return msg_('Email 已確認', '已經寄信給你的法定代理人，請他按信中的「我同意公開」，之後就會進入審核。');
+      return msg_('Email 已確認，等待家長同意', '已經寄信給你的法定代理人，請他按信中的「我同意公開」。家長同意後才會送出審核，審核約需 1～2 個工作天。', 'minor', 3);
     }
     return afterConsent_(row, d);
   }
@@ -265,7 +265,7 @@ function handleToken_(token) {
     if (status !== 'guardian') return msg_('已經處理過', '這份資料已經確認過了。');
     useToken_(token, 'guardian', true);
     afterConsent_(row, d);
-    return msg_('謝謝您', '已收到您的同意。資料經主辦人確認後，就會刊登在棋手名鑑。');
+    return msg_('謝謝您，已送出審核', '已收到您的同意。主辦人會在 1～2 個工作天內審核，上線時會寄信通知。', 'minor', 4);
   }
 
   if (tk.purpose === 'approve' || tk.purpose === 'approvehonor' || tk.purpose === 'reject') {
@@ -310,7 +310,7 @@ function handleToken_(token) {
 
 function afterConsent_(row, d) {
   const slug = row.values[P.slug];
-  if (!CONFIG.APPROVE_NEW) { publishNew_(row, d); return msg_('登錄完成', '你的棋手頁約 1～2 分鐘後上線：' + CONFIG.SITE + '/players/' + slug + '/'); }
+  if (!CONFIG.APPROVE_NEW) { publishNew_(row, d); return msg_('登錄完成', '你的棋手頁約 1～2 分鐘後上線：' + CONFIG.SITE + '/players/' + slug + '/', 'reg', 5); }
   touch_(row, 'pending');
   const photo = row.values[P.photo];
   const h = CONFIG.ADMIN_LINK_DAYS * 24;
@@ -322,7 +322,7 @@ function afterConsent_(row, d) {
       honorBlock_(slug, row.values[P.real], h) +
       button_(tokenLink_('approve', slug, h), '核准上線') + ' ' + button_(tokenLink_('reject', slug, h), '退回')),
     inlineImages: inline_(photo) });
-  return msg_('Email 已確認', '謝謝！資料經主辦人確認後就會上線，屆時會寄信通知你。');
+  return msg_('已送出審核', '主辦人會在 1～2 個工作天內審核，上線時會寄信通知你。在這之前，棋手名鑑看不到你的資料是正常的，請不要重複登錄。', 'reg', 3);
 }
 
 function publishNew_(row, d, honor) {
@@ -360,7 +360,7 @@ function clean_(f) {
   const strats = getStrategies(), valid = strats.map(s => s.slug);
   const styles = (Array.isArray(f.styles) ? f.styles : []).filter(s => valid.indexOf(s) >= 0);
   // 自行輸入的戰法：名稱和戰法頁相同時換成戰法頁代號，其他保留文字（之後建立戰法頁會自動連結）
-  String(f.custom_styles || '').split(/[、,，;；\/\n]+/).map(x => txt(x, 12).replace(/\n/g, '').replace(/["'\[\]]/g, ''))
+  String(f.custom_styles || '').split(/[、,，;；\/\s\u3000]+/).map(x => txt(x, 12).replace(/\n/g, '').replace(/["'\[\]]/g, ''))
     .filter(Boolean).slice(0, 3).forEach(name => {
       const hit = strats.filter(s => s.title === name || s.ja === name)[0];
       const v = hit ? hit.slug : name;

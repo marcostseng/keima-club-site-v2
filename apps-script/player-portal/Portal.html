@@ -51,7 +51,17 @@ input:focus,select:focus,textarea:focus,button:focus-visible,.chip:focus-within{
 .notice.err{border-left-color:var(--bengara);color:var(--bengara)}
 .zone{margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
 .counter{float:right;font-weight:400;font-size:13px;color:var(--muted)}
+.flow{list-style:none;margin:20px 0 4px;padding:0;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:6px;counter-reset:f}
+.flow li{position:relative;padding:10px 10px 10px 40px;background:var(--paper);border:1px solid var(--line);font-size:14px;line-height:1.45;counter-increment:f}
+.flow li::before{content:counter(f);position:absolute;left:10px;top:10px;width:22px;height:22px;border-radius:50%;border:1px solid var(--muted);color:var(--muted);font-size:12px;display:flex;align-items:center;justify-content:center}
+.flow li small{display:block;color:var(--muted);font-size:12px}
+.flow li.done{color:var(--muted)}
+.flow li.done::before{content:"✓";background:var(--ok);border-color:var(--ok);color:#fff}
+.flow li.now{border-color:var(--bengara);background:#fff}
+.flow li.now::before{background:var(--bengara);border-color:var(--bengara);color:#fff}
+.note-box{margin:14px 0 0;padding:12px 14px;background:var(--paper);border-left:4px solid #B08D45;font-size:14px}
 [hidden]{display:none!important}
+@media (max-width:620px){.flow{grid-template-columns:1fr}}
 @media (max-width:520px){.row2{grid-template-columns:1fr}h1{font-size:26px}}
 </style>
 </head>
@@ -64,6 +74,15 @@ const B = <?!= boot ?>;
 const app = document.getElementById('app');
 document.getElementById('siteLink').href = B.site + '/players/';
 let STRATS = [];
+const FLOWS = {
+  reg:   [['填寫資料',''],['確認 Email','收信點連結，24 小時內'],['主辦人審核','約 1～2 個工作天'],['棋手頁上線','會寄信通知你']],
+  minor: [['填寫資料',''],['確認 Email','收信點連結，24 小時內'],['家長同意','家長收信點同意'],['主辦人審核','約 1～2 個工作天'],['棋手頁上線','會寄信通知你']],
+  edit:  [['申請修改連結','輸入登錄的 Email'],['收信點連結','24 小時內有效'],['修改並儲存',''],['1～2 分鐘後更新','不需要審核']]
+};
+function flow(name,step){
+  const f=FLOWS[name]; if(!f) return '';
+  return `<ol class="flow" style="--n:${f.length}">`+f.map((x,i)=>`<li class="${i+1<step?'done':i+1===step?'now':''}">${x[0]}${x[1]?`<small>${x[1]}</small>`:''}</li>`).join('')+'</ol>';
+}
 
 function h(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function go(view,data){B.view=view;B.data=data||{};render();window.scrollTo(0,0);}
@@ -81,21 +100,22 @@ function render(){
     <h1>棋手名鑑</h1>
     <p class="lead">參加過桂馬會例會或棋戰的棋友，都可以在這裡建立自己的棋手頁，之後也能隨時自己修改或下架。</p>
     <div class="choices">
-      <button class="choice" onclick="go('register')"><b>登錄棋手名鑑</b><span>第一次建立棋手頁</span></button>
-      <button class="choice" onclick="go('request')"><b>修改或下架我的資料</b><span>輸入登錄時的 Email，收取修改連結</span></button>
+      <button class="choice" onclick="go('register')"><b>登錄棋手名鑑</b><span>填表 → 確認 Email → 審核約 1～2 個工作天 → 上線</span></button>
+      <button class="choice" onclick="go('request')"><b>修改或下架我的資料</b><span>收信取得修改連結 → 儲存後 1～2 分鐘更新，不需要審核</span></button>
     </div>`;
   else if(v==='request') app.innerHTML=`
     <h1>修改我的資料</h1>
     <p class="lead">輸入登錄時填寫的 Email，我們會寄一個修改連結給你，點連結就能修改或下架。</p>
+    ${flow('edit',1)}
     <label class="f" for="em">Email</label><input type="email" id="em" autocomplete="email">
     <div class="actions"><button class="btn" id="go">寄修改連結</button><button class="btn ghost" onclick="go('home')">返回</button></div>
     <div id="note" hidden></div>`;
-  else if(v==='msg') app.innerHTML=`<h1>${h(d.title)}</h1><p class="lead">${h(d.text)}</p>
+  else if(v==='msg') app.innerHTML=`<h1>${h(d.title)}</h1>${flow(d.flow,d.step)}<p class="lead" style="margin-top:16px">${h(d.text)}</p>
     <div class="actions"><a class="btn ghost" href="${B.site}/players/">回到棋手名鑑</a></div>`;
   else app.innerHTML=form(v==='edit',d);
 
   if(v==='request') document.getElementById('go').onclick=e=>run('requestEditLink',[document.getElementById('em').value],e.target,
-    msg=>{const n=document.getElementById('note');n.hidden=false;n.className='notice';n.textContent=msg;});
+    msg=>go('msg',{title:'請收信',text:msg,flow:'edit',step:2}));
   if(v==='register'||v==='edit') wire(v==='edit',d);
 }
 
@@ -105,7 +125,8 @@ function form(edit,d){
   let years='';for(let y=B.year;y>=1990;y--)years+=`<option${String(p.since)===String(y)?' selected':''}>${y}</option>`;
   return `
   <h1>${edit?'修改我的資料':'登錄棋手名鑑'}</h1>
-  <p class="lead">${edit?'修改後按「儲存修改」，約 1～2 分鐘後棋手頁就會更新。':'「公開資料」會顯示在棋手頁；真實姓名和 Email 不會公開。'}</p>
+  <p class="lead">${edit?'修改後按「儲存修改」，不需要審核，約 1～2 分鐘後棋手頁就會更新。':'「公開資料」會顯示在棋手頁；真實姓名和 Email 不會公開。'}</p>
+  ${edit?flow('edit',3):flow('reg',1)+'<p class="note-box">送出表單後，<b>要到信箱點「確認 Email」才算完成</b>，接著由主辦人審核，約需 1～2 個工作天。上線前在棋手名鑑看不到你的資料是正常的，請不要重複填寫。</p>'}
 
   <h2>公開資料</h2>
   <label class="f" for="title">顯示名稱<small>必填，本名或暱稱，20 字內</small></label>
@@ -118,7 +139,7 @@ function form(edit,d){
   </div>
   <label class="f">常用戰法<small>選填，最多 ${B.maxStyles} 個</small></label>
   <div class="chips" id="styles"><span class="hint">載入戰法清單中…</span></div>
-  <label class="f" for="cstyles" style="margin-top:14px">清單裡沒有的戰法<small>選填，最多 3 個，用頓號分隔</small></label>
+  <label class="f" for="cstyles" style="margin-top:14px">清單裡沒有的戰法<small>選填，最多 3 個，用頓號、逗號或空格分隔</small></label>
   <input type="text" id="cstyles" maxlength="40" placeholder="例如：鬼殺、右玉">
   <label class="f" for="bio">個人簡介<small>選填</small><span class="counter" id="cnt"></span></label>
   <textarea id="bio" maxlength="${B.maxBio}" placeholder="例如：喜歡下四間飛車，週四例會常出現。">${h(p.bio)}</textarea>
@@ -208,12 +229,12 @@ function wire(edit,d){
 
   document.getElementById('save').onclick=e=>{
     const f=collect();
-    if(edit) return run('submitEdit',[d.token,f],e.target,r=>go('msg',{title:'已儲存',text:r.text+' '+r.url}));
+    if(edit) return run('submitEdit',[d.token,f],e.target,r=>go('msg',{title:'已儲存',text:r.text+' '+r.url,flow:'edit',step:5}));
     Object.assign(f,{slug:document.getElementById('slug').value,email:document.getElementById('email').value,
       real_name:document.getElementById('real').value,
       minor:document.getElementById('minor').checked,guardian:document.getElementById('guardian').value,
       consent:document.getElementById('consent').checked});
-    run('submitRegistration',[f],e.target,msg=>go('msg',{title:'請收信確認',text:msg}));
+    run('submitRegistration',[f],e.target,msg=>go('msg',{title:'還差一步：請到信箱確認 Email',text:msg,flow:f.minor?'minor':'reg',step:2}));
   };
   const del=document.getElementById('del');
   if(del) del.onclick=e=>{ if(confirm('確定要下架嗎？棋手頁和照片會被刪除。'))
