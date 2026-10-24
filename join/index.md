@@ -32,9 +32,10 @@ description: 入會費 NT$1,000，一次性繳費、無年費。會員權益、�
 ## 入會流程 {#process}
 
 <ol class="steps">
-  <li><strong>填寫入會申請表</strong><br>送出後，會收到附有匯款資訊的 Email</li>
-  <li><strong>匯款入會費 NT$1,000</strong><br>匯款後直接回覆那封信，告訴我們轉帳帳號末 5 碼</li>
-  <li><strong>確認入帳，完成入會</strong><br>我們會寄給你會員編號，以及會員專屬社群的邀請連結</li>
+  <li><strong>填寫入會申請表</strong><br>送出後，會收到繳費說明的 Email</li>
+  <li><strong>繳交入會費 NT$1,000</strong><br>可以匯款（回覆那封信告訴我們轉帳帳號末 5 碼），或在例會現場繳費</li>
+  <li><strong>確認入帳，收到會員編號</strong><br>Email 會附上你的會員編號，以及加入會員專屬 LINE 群的方式</li>
+  <li><strong>登入會員專區</strong><br>到<a href="/member/">會員專區</a>用入會時的 Email 收驗證碼登入，查看會員證與會員教材</li>
 </ol>
 
 {% include btn.html lang="zh" key="member_apply" class="btn btn-primary" fallback="#process" text="填寫入會申請表" %}
@@ -49,6 +50,12 @@ description: 入會費 NT$1,000，一次性繳費、無年費。會員權益、�
 
 **報名龍馬盃時要怎麼使用會員資格？**
 在報名表「是否為桂馬會會員」選「是」，並填寫會員編號。主辦單位會核對會員名單。
+
+**會員專區要怎麼登入？**
+到[會員專區](/member/)輸入入會時填寫的 Email，收到 6 位數驗證碼後輸入即可，不需要密碼。
+
+**棋手頁上的「桂馬會會員」稱號是什麼？**
+登錄[棋手名鑑](/players/)的會員，棋手頁「頭銜與優勝」下方會顯示「桂馬會會員」稱號。入會時可以選擇要不要顯示，之後也可以來信更改。
 
 **會員資格有期限嗎？**
 入會費一次繳清，不需年費。

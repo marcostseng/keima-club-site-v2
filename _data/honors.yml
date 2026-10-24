@@ -1,0 +1,31 @@
+# 特別稱號：顯示在棋手頁「頭銜與優勝」區塊下方，依這裡的順序排列
+# mark：駒上的一個字；tier：gold（紅字，像成駒）或 silver（黑字）
+#
+# 誰有哪個稱號：
+#   member（桂馬會會員）            → _data/player_honors.yml 手動指定
+#   founding-helper、helper（協力棋友）→ 名字在 _data/helpers.yml 就自動出現（founding: true 為創始）
+#   regular（例會老面孔）            → 名字在 _data/regulars.yml 就自動出現
+#   其他稱號                         → _data/player_honors.yml 手動指定
+- id: member
+  name: 桂馬會會員
+  mark: 桂
+  tier: gold
+  desc: 桂馬會日本將棋俱樂部會員
+
+- id: founding-helper
+  name: 創始協力棋友
+  mark: 創
+  tier: gold
+  desc: 從創立時就協助桂馬會的棋友
+
+- id: helper
+  name: 協力棋友
+  mark: 協
+  tier: gold
+  desc: 協助例會、迎新、教學或比賽的棋友
+
+- id: regular
+  name: 例會老面孔
+  mark: 例
+  tier: silver
+  desc: 例會出席滿 10 次

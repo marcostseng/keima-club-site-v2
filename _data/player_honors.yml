@@ -1,0 +1,7 @@
+# 棋手的特別稱號：棋手檔名（_players/ 的檔名，不含 .md）: [稱號 id]
+# 稱號 id 見 _data/honors.yml。
+# member：會員且在入會表單選「同意顯示」才加（看會員名冊「名鑑稱號」欄）。
+# 寫在這裡而不是棋手檔，是因為棋手自助系統修改資料時會重寫棋手檔。
+#
+# wang-xiaoming: [member]
+xshogi: [member]

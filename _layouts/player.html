@@ -44,6 +44,7 @@ layout: base
       <h2>頭銜與優勝</h2>
       {% if honors != "" %}<ol class="honors">{{ honors }}</ol>{% else %}<p>目前沒有優勝紀錄。</p>{% endif %}
       <p class="db-note">依「<a href="/titles/">棋戰與歷屆優勝</a>」自動列出。</p>
+      {% include player-honors.html pid=pid hn=hn %}
       <h2>對局紀錄</h2>
       {%- if games.size > 0 %}
       <table>

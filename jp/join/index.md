@@ -32,9 +32,9 @@ description: 入会金 NT$1,000（一回のみ、年会費なし）。会員特�
 ## 入会手続き {#process}
 
 <ol class="steps">
-  <li><strong>入会申込フォームに記入</strong><br>送信後、振込先を記載したメールが届きます（フォームは中国語、各項目に日本語の説明があります）</li>
-  <li><strong>入会金 NT$1,000 を振込</strong><br>振込後、そのメールに返信して、振込元口座番号の下5桁をお知らせください</li>
-  <li><strong>入金確認後、入会完了</strong><br>会員番号と会員専用グループへの招待をお送りします</li>
+  <li><strong>入会申込フォームに記入</strong><br>送信後、お支払い方法を記載したメールが届きます（フォームは中国語です。ご不明な点は admin@keima.club までお問い合わせください）</li>
+  <li><strong>入会金 NT$1,000 を振込</strong><br>振込の場合は、そのメールに返信して振込元口座番号の下5桁をお知らせください。例会の会場でもお支払いいただけます</li>
+  <li><strong>入金確認後、入会完了</strong><br>会員番号と、会員専用 LINE グループへの参加方法をメールでお送りします</li>
 </ol>
 
 {% include btn.html lang="ja" key="member_apply" class="btn btn-primary" fallback="#process" text="入会を申し込む" %}

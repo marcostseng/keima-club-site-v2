@@ -1,0 +1,44 @@
+{%- comment -%}
+特別稱號（遊戲稱號式的名牌），放在棋手頁「頭銜與優勝」區塊最後。
+用法：{% include player-honors.html pid=pid hn=hn %}
+  pid：棋手檔名；hn：比對協力棋友、例會老面孔名單用的名字（和優勝紀錄同一個）
+稱號定義：_data/honors.yml；手動指定：_data/player_honors.yml
+{%- endcomment -%}
+{%- assign ids = "" | split: "" -%}
+{%- for i in site.data.player_honors[include.pid] -%}{%- assign ids = ids | push: i -%}{%- endfor -%}
+{%- if include.hn and include.hn != "" -%}
+  {%- for h in site.data.helpers -%}
+    {%- if h.name == include.hn -%}
+      {%- if h.founding -%}{%- assign ids = ids | push: "founding-helper" -%}{%- else -%}{%- assign ids = ids | push: "helper" -%}{%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- for r in site.data.regulars -%}{%- if r == include.hn -%}{%- assign ids = ids | push: "regular" -%}{%- endif -%}{%- endfor -%}
+{%- endif -%}
+{%- if ids.size > 0 -%}
+<div class="sp-honors">
+  <h3>特別稱號</h3>
+  <ul class="sp-list">
+  {%- for h in site.data.honors -%}{%- if ids contains h.id %}
+    <li class="sp-plate sp-{{ h.tier | default: 'gold' }}" title="{{ h.desc | escape }}">
+      <span class="sp-mark" aria-hidden="true">{{ h.mark | default: h.name | slice: 0 }}</span>
+      <span class="sp-text"><span class="sp-name">{{ h.name }}</span>{% if h.desc %}<span class="sp-desc">{{ h.desc }}</span>{% endif %}</span>
+    </li>
+  {%- endif -%}{%- endfor %}
+  </ul>
+</div>
+<style>
+.sp-honors{margin:28px 0 8px}
+.sp-honors h3{font-size:17px;margin:0 0 12px;letter-spacing:.06em}
+.prose .sp-list{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:12px}
+.prose .sp-plate{display:flex;align-items:center;gap:14px;margin:0;padding:10px 22px 10px 12px;border-radius:2px;background:var(--kon);box-shadow:inset 0 0 0 4px var(--kon),inset 0 0 0 5px var(--kin)}
+.sp-mark{flex:none;width:34px;height:41px;display:flex;align-items:center;justify-content:center;padding-top:7px;background:#E3C48A;clip-path:polygon(50% 0,86% 16%,100% 100%,0 100%,14% 16%);font-family:var(--serif);font-size:17px;font-weight:700;line-height:1;color:var(--koge)}
+.sp-text{display:flex;flex-direction:column;line-height:1.4}
+.sp-name{font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:.08em;color:var(--kin-light)}
+.sp-desc{font-size:12px;color:rgba(245,240,230,.72)}
+.sp-gold .sp-mark{color:var(--enji)}
+.prose .sp-silver{box-shadow:inset 0 0 0 4px var(--kon),inset 0 0 0 5px #9AA3B5}
+.sp-silver .sp-mark{background:#DDD5C3}
+.sp-silver .sp-name{color:#E4E7EE}
+@media (max-width:520px){.prose .sp-plate{flex:1 1 100%}}
+</style>
+{%- endif -%}
