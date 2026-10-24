@@ -124,6 +124,7 @@ function setup() {
   ScriptApp.newTrigger('handleEdit').forSpreadsheet(ss).onEdit().create();
   ScriptApp.newTrigger('cleanSessions').timeBased().everyDays(1).atHour(4).create();
   ScriptApp.newTrigger('syncMemberPlayers').timeBased().everyHours(1).create();
+  ScriptApp.newTrigger('checkTokenExpiry').timeBased().everyDays(1).atHour(9).create();
 
   if (props.getProperty('GITHUB_TOKEN')) {
     const r = ghContents_('get', '_players');
@@ -374,6 +375,11 @@ function syncMemberPlayers() {
     return syncMemberPlayers_();
   } catch (err) {
     console.error(err);
+    notifyOnce_('sync-fail', '【會員系統】棋手稱號同步失敗',
+      '錯誤訊息：' + err.message + '\n\n' +
+      '網站和會員登入不受影響，只是棋手頁的會員稱號暫時不會更新。\n' +
+      '如果訊息是 401，代表 GitHub token 已過期或失效，請依照 token 到期通知信的步驟更新。\n' +
+      '修好後在會員名冊按「桂馬會 → 立即同步棋手稱號」。\n\n' + ss_().getUrl());
     return '棋手稱號同步失敗：' + err.message;
   } finally {
     lock.releaseLock();
@@ -434,6 +440,60 @@ function autoMatchPlayers_() {
     sh.getRange(r._row, col_('棋手檔名')).setValue(slug);
     addNote_(r._row, '棋手檔名依 Email 自動比對');
   });
+}
+
+/* ───────────── GitHub token 到期檢查（每天早上 9 點） ───────────── */
+
+const TOKEN_ALERT_DAYS = [30, 14, 7, 3, 1, 0]; // 剩這些天數時寄信提醒
+
+function checkTokenExpiry() {
+  const token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
+  if (!token) return Logger.log('尚未設定 GITHUB_TOKEN。');
+  const r = UrlFetchApp.fetch('https://api.github.com/repos/' + CFG.GH_OWNER + '/' + CFG.GH_REPO, {
+    muteHttpExceptions: true,
+    headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+  });
+  if (r.getResponseCode() === 401) {
+    notifyOnce_('token-invalid', '【緊急】桂馬會 GitHub token 已失效', tokenGuide_('已經失效（過期或被撤銷）'));
+    return Logger.log('GitHub token 已失效。');
+  }
+  const headers = r.getHeaders();
+  let exp = '';
+  Object.keys(headers).forEach(k => { if (k.toLowerCase() === 'github-authentication-token-expiration') exp = String(headers[k]); });
+  const m = exp.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return Logger.log('這組 token 沒有到期日。');
+  const expDate = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const left = Math.round((expDate - today) / 864e5);
+  Logger.log('GitHub token 到期日：' + m[0] + '（剩 ' + left + ' 天）');
+  if (TOKEN_ALERT_DAYS.indexOf(left) >= 0) {
+    notifyOnce_('token-' + left, '【提醒】桂馬會 GitHub token 將在 ' + left + ' 天後到期（' + m[0] + '）',
+      tokenGuide_('將在 ' + m[0] + ' 到期，還剩 ' + left + ' 天'));
+  }
+}
+
+function tokenGuide_(state) {
+  return '網站的 GitHub token ' + state + '。\n\n' +
+    '■ 到期後會怎樣\n' +
+    '・棋手自助系統：棋手無法登錄、修改、下架資料\n' +
+    '・會員系統：棋手頁的會員稱號不會更新\n' +
+    '・不受影響：網站瀏覽、會員專區登入、入會申請、寄信\n\n' +
+    '■ 更新步驟（約 3 分鐘）\n' +
+    '1. GitHub → 右上頭像 → Settings → Developer settings → Personal access tokens → Fine-grained tokens\n' +
+    '2. 點這組 token → Regenerate token → 選新的到期日 → 複製 github_pat_ 開頭的新 token\n' +
+    '3. 棋手自助系統的 Apps Script → 專案設定 → 指令碼屬性 → GITHUB_TOKEN 貼上新值\n' +
+    '4. 會員系統的 Apps Script → 同樣更新 GITHUB_TOKEN\n' +
+    '5. 在會員名冊按「桂馬會 → 立即同步棋手稱號」，顯示成功就完成了\n\n' +
+    '兩個 Apps Script 都要更新，漏一個就有一邊會壞。';
+}
+
+/* 同一件事一天最多通知一次 */
+function notifyOnce_(key, subject, body) {
+  const props = PropertiesService.getScriptProperties();
+  const today = Utilities.formatDate(new Date(), CFG.TZ, 'yyyy-MM-dd');
+  if (props.getProperty('notified:' + key) === today) return;
+  notify_(subject, body);
+  props.setProperty('notified:' + key, today);
 }
 
 function addNote_(rowNum, text) {
