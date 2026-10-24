@@ -10,9 +10,9 @@ styles: ["bogin", "shikenbisha", "aifuribisha", "mino-gakoi", "tare-fu"]
 consent: Fri Oct 23 2026 00:00:00 GMT+0800 (台北標準時間)
 self_managed: true
 ---
-桂馬會將棋俱樂部創辦人
+桂馬會將棋俱樂部創辦
+政大日本將棋與日本語言文化研究社創社社長
 山角行日本將棋教室創辦人
 貓二步將棋社發起人
 清大日本將棋社第一屆指導老師
-政大日本將棋與日本語言文化研究社創社社長
 政大將棋社第四任社長
