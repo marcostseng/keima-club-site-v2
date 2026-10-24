@@ -8,11 +8,15 @@
  *     繳費回報表送出 → 填入名冊的匯款末五碼 → 通知主辦人對帳
  *  3. 名冊「狀態」改為「已入會」→ 自動配發會員編號 → 寄歡迎信
  *  4. 網站 /member/ 的 Email 驗證碼登入（部署為網頁應用程式）
+ *  5. 棋手稱號自動同步：會員名冊 → GitHub 的 _data/member_players.yml
+ *     （只寫棋手檔名；只由試算表觸發器與計時器執行，網站 API 無法觸發）
  *
  * 指令碼屬性（專案設定 → 指令碼屬性）：
  *  PAYMENT_INFO     匯款資訊（銀行、帳號），寫在繳費說明信裡
  *  LINE_ID          你的 LINE ID（會員加好友後由你邀請入群；只給登入的會員）
  *  MATERIALS_URL    會員教材資料夾連結（只給登入的會員）
+ *  GITHUB_TOKEN     與棋手自助系統相同的 fine-grained token（只限本 repo、Contents 讀寫）
+ *  PLAYER_SHEET_ID  棋手自助系統試算表的 ID（用 Email 自動比對棋手檔名）
  */
 
 const CFG = {
@@ -27,11 +31,17 @@ const CFG = {
   SESSION_DAYS: 180,
   OTP_TTL: 600,      // 驗證碼有效 10 分鐘
   OTP_MAX_TRIES: 5,
-  RESEND_WAIT: 60    // 同一 Email 60 秒內不重寄
+  RESEND_WAIT: 60,   // 同一 Email 60 秒內不重寄
+  GH_OWNER: 'marcostseng',
+  GH_REPO: 'keima-club-site-v2',
+  GH_BRANCH: 'main',
+  MEMBER_PLAYERS_PATH: '_data/member_players.yml'
 };
 
+const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,62}$/;  // 棋手檔名格式（防止寫入奇怪內容）
+
 const COLS = ['申請時間', '姓名', '顯示名稱', 'Email', '手機', '段級位', '繳費方式', '匯款末五碼',
-  '未滿18歲', '法定代理人', '名鑑稱號', '狀態', '會員編號', '入會日期', '編號信', '備註'];
+  '未滿18歲', '法定代理人', '名鑑稱號', '狀態', '會員編號', '入會日期', '編號信', '備註', '棋手檔名'];
 
 const STATUS = { PENDING: '待繳費', ACTIVE: '已入會', SUSPENDED: '停權', CANCELLED: '取消' };
 
@@ -65,17 +75,14 @@ function setup() {
   if (!ss) throw new Error('這個指令碼沒有綁定試算表。請打開「桂馬會會員名冊」試算表 → 擴充功能 → Apps Script，把程式碼貼在那裡再執行 setup。');
   const props = PropertiesService.getScriptProperties();
   props.setProperty('SS_ID', ss.getId());
-  ['PAYMENT_INFO', 'LINE_ID', 'MATERIALS_URL'].forEach(k => {
+  ['PAYMENT_INFO', 'LINE_ID', 'MATERIALS_URL', 'GITHUB_TOKEN', 'PLAYER_SHEET_ID'].forEach(k => {
     if (props.getProperty(k) === null) props.setProperty(k, '');
   });
 
   // 會員名冊
   let sh = ss.getSheetByName(CFG.MEMBERS) || ss.insertSheet(CFG.MEMBERS);
-  if (sh.getLastRow() === 0) {
-    sh.appendRow(COLS);
-    sh.setFrozenRows(1);
-    sh.getRange(1, 1, 1, COLS.length).setFontWeight('bold');
-  }
+  sh.getRange(1, 1, 1, COLS.length).setValues([COLS]).setFontWeight('bold'); // 新增欄位時補上標題
+  sh.setFrozenRows(1);
   const body = n => sh.getRange(2, col_(n), sh.getMaxRows() - 1);
   body('狀態').setDataValidation(
     SpreadsheetApp.newDataValidation().requireValueInList(Object.values(STATUS), true).build());
@@ -116,6 +123,14 @@ function setup() {
   ScriptApp.newTrigger('handleFormSubmit').forSpreadsheet(ss).onFormSubmit().create();
   ScriptApp.newTrigger('handleEdit').forSpreadsheet(ss).onEdit().create();
   ScriptApp.newTrigger('cleanSessions').timeBased().everyDays(1).atHour(4).create();
+  ScriptApp.newTrigger('syncMemberPlayers').timeBased().everyHours(1).create();
+
+  if (props.getProperty('GITHUB_TOKEN')) {
+    const r = ghContents_('get', '_players');
+    Logger.log(r.code === 200 ? 'GitHub 連線正常。' : 'GitHub 連線失敗（' + r.code + '），請檢查 GITHUB_TOKEN。');
+  } else {
+    Logger.log('尚未設定 GITHUB_TOKEN：棋手稱號不會自動同步。');
+  }
 
   Logger.log('入會申請表：\n' + form.getPublishedUrl());
   Logger.log('繳費回報表（會自動附在繳費說明信裡）：\n' + payForm.getPublishedUrl());
@@ -237,15 +252,19 @@ function handlePayReport_(e) {
 function handleEdit(e) {
   const r = e.range;
   if (r.getSheet().getName() !== CFG.MEMBERS || r.getRow() < 2) return;
-  if (r.getNumRows() !== 1 || r.getNumColumns() !== 1 || r.getColumn() !== col_('狀態')) return;
-  if (e.value !== STATUS.ACTIVE) return;
-  activateRow_(r.getRow());
+  if (r.getNumRows() === 1 && r.getNumColumns() === 1 && r.getColumn() === col_('狀態') && e.value === STATUS.ACTIVE) {
+    activateRow_(r.getRow());
+  }
+  // 影響棋手稱號的欄位有變動 → 同步到網站（內容沒變就不會 commit）
+  const watch = ['狀態', '名鑑稱號', '棋手檔名'].map(col_);
+  const c1 = r.getColumn(), c2 = c1 + r.getNumColumns() - 1;
+  if (watch.some(c => c >= c1 && c <= c2)) syncMemberPlayers();
 }
 
 /**
  * 開通一列會員：
- *  - 會員編號空白 → 配發下一個編號，入會日期填今天（新會員）
- *  - 會員編號已填 → 保留原編號，入會日期照填的（既有會員，空白就留空）
+ *  - 會員編號空白 → 配發下一個編號；已填 → 保留（可手動指定編號）
+ *  - 入會日期空白且有申請時間（從申請表來的）→ 填今天；手動匯入的既有會員照填的
  *  - 「編號信」空白 → 寄歡迎信並記錄寄出時間；已寄過就不重寄
  */
 function activateRow_(rowNum) {
@@ -263,9 +282,11 @@ function activateRow_(rowNum) {
       return false;
     }
     noCell.setBackground(null);
-    if (!no) {
-      noCell.setValue(nextNumber_());
-      sh.getRange(rowNum, col_('入會日期')).setValue(new Date());
+    if (!no) noCell.setValue(nextNumber_());
+    // 入會日期：透過申請表入會的（有申請時間）自動填今天；手動匯入的既有會員照填的，空白就留空
+    const dateCell = sh.getRange(rowNum, col_('入會日期'));
+    if (dateCell.getValue() === '' && sh.getRange(rowNum, col_('申請時間')).getValue() !== '') {
+      dateCell.setValue(new Date());
     }
     if (mailCell.getValue() !== '') return false;
     SpreadsheetApp.flush();
@@ -302,6 +323,7 @@ function onOpen() {
   SpreadsheetApp.getUi().createMenu('桂馬會')
     .addItem('開通選取列的會員', 'activateSelected')
     .addItem('重寄會員編號信（選取列）', 'resendWelcome')
+    .addItem('立即同步棋手稱號', 'syncNow')
     .addToUi();
 }
 
@@ -318,7 +340,8 @@ function activateSelected() {
     sh.getRange(i, col_('狀態')).setValue(STATUS.ACTIVE);
     if (activateRow_(i)) done++;
   }
-  ui.alert('已開通，寄出 ' + done + ' 封會員編號信（之前寄過的不重寄）。');
+  const sync = syncMemberPlayers();
+  ui.alert('已開通，寄出 ' + done + ' 封會員編號信（之前寄過的不重寄）。\n' + sync);
 }
 
 function resendWelcome() {
@@ -335,6 +358,101 @@ function resendWelcome() {
     }
   }
   SpreadsheetApp.getUi().alert('已重寄 ' + sent + ' 封。');
+}
+
+/* ───────────── 棋手稱號同步（會員名冊 → GitHub） ───────────── */
+
+function syncNow() {
+  SpreadsheetApp.getUi().alert(syncMemberPlayers());
+}
+
+/** 計時器（每小時）、名冊異動、選單都會呼叫；回傳一行結果說明 */
+function syncMemberPlayers() {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(30000)) return '同步進行中，稍後會再執行。';
+  try {
+    return syncMemberPlayers_();
+  } catch (err) {
+    console.error(err);
+    return '棋手稱號同步失敗：' + err.message;
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function syncMemberPlayers_() {
+  if (!PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN')) return '尚未設定 GITHUB_TOKEN，未同步棋手稱號。';
+  autoMatchPlayers_();
+
+  const dir = ghContents_('get', '_players');
+  if (dir.code !== 200) throw new Error('讀取 GitHub 棋手資料夾失敗（' + dir.code + '）');
+  const existing = {};
+  dir.json.forEach(f => { if (/\.md$/.test(f.name)) existing[f.name.replace(/\.md$/, '')] = true; });
+
+  const slugs = {};
+  rows_().forEach(r => {
+    const slug = String(r.棋手檔名 || '').trim().toLowerCase();
+    if (!slug || r.狀態 !== STATUS.ACTIVE || r.名鑑稱號 !== '同意顯示') return;
+    if (!SLUG_RE.test(slug)) return addNote_(r._row, '棋手檔名格式不符，未同步');
+    if (!existing[slug]) return addNote_(r._row, '找不到棋手頁 ' + slug + '，未同步');
+    slugs[slug] = true;
+  });
+  const list = Object.keys(slugs).sort();
+  const text = '# 自動產生，請勿手動修改（來源：會員名冊，由會員系統每小時同步）\n' +
+    '# 會員且同意顯示稱號的棋手檔名；只有檔名，沒有會員編號或個人資料\n' +
+    (list.length ? list.map(x => '- ' + x).join('\n') : '[]') + '\n';
+
+  const cur = ghContents_('get', CFG.MEMBER_PLAYERS_PATH);
+  const sha = cur.code === 200 ? cur.json.sha : null;
+  const old = cur.code === 200
+    ? Utilities.newBlob(Utilities.base64Decode(cur.json.content.replace(/\s/g, ''))).getDataAsString('UTF-8') : '';
+  if (old === text) return '棋手稱號已是最新（' + list.length + ' 位）。';
+
+  const body = { message: '會員稱號自動同步（' + list.length + ' 位）', branch: CFG.GH_BRANCH,
+    content: Utilities.base64Encode(text, Utilities.Charset.UTF_8) };
+  if (sha) body.sha = sha;
+  const put = ghContents_('put', CFG.MEMBER_PLAYERS_PATH, body);
+  if (put.code >= 300) throw new Error('寫入 GitHub 失敗（' + put.code + '）');
+  return '棋手稱號已同步到網站（' + list.length + ' 位），約 1～2 分鐘後生效。';
+}
+
+/** 已入會、還沒填棋手檔名的會員：用 Email 比對棋手自助系統，找到就自動填入 */
+function autoMatchPlayers_() {
+  const id = PropertiesService.getScriptProperties().getProperty('PLAYER_SHEET_ID');
+  if (!id) return;
+  const ps = SpreadsheetApp.openById(id).getSheetByName('Players');
+  if (!ps) return;
+  const byEmail = {};
+  ps.getDataRange().getValues().slice(1).forEach(v => {
+    if (v[3] === 'live' && v[0] && v[1]) byEmail[norm_(v[1])] = String(v[0]);
+  });
+  const sh = members_();
+  rows_().forEach(r => {
+    if (r.狀態 !== STATUS.ACTIVE || String(r.棋手檔名 || '').trim()) return;
+    const slug = byEmail[norm_(r.Email)];
+    if (!slug) return;
+    sh.getRange(r._row, col_('棋手檔名')).setValue(slug);
+    addNote_(r._row, '棋手檔名依 Email 自動比對');
+  });
+}
+
+function addNote_(rowNum, text) {
+  const cell = members_().getRange(rowNum, col_('備註'));
+  const cur = String(cell.getValue() || '');
+  if (cur.indexOf(text) < 0) cell.setValue(cur ? cur + '；' + text : text);
+}
+
+function ghContents_(method, path, body) {
+  const token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
+  const url = 'https://api.github.com/repos/' + CFG.GH_OWNER + '/' + CFG.GH_REPO + '/contents/' +
+    path.split('/').map(encodeURIComponent).join('/') + (method === 'get' ? '?ref=' + CFG.GH_BRANCH : '');
+  const opt = { method: method, muteHttpExceptions: true,
+    headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } };
+  if (body) { opt.contentType = 'application/json'; opt.payload = JSON.stringify(body); }
+  const r = UrlFetchApp.fetch(url, opt);
+  let json = null;
+  try { json = JSON.parse(r.getContentText()); } catch (err) {}
+  return { code: r.getResponseCode(), json: json };
 }
 
 /* ───────────── 網站 API（部署為網頁應用程式） ───────────── */
@@ -552,4 +670,9 @@ function fmtDate_(d) {
 
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+/* 查詢今日剩餘寄信額度（在編輯器手動執行） */
+function checkQuota() {
+  Logger.log('今日剩餘寄信額度：' + MailApp.getRemainingDailyQuota());
 }

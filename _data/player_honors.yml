@@ -1,7 +1,6 @@
-# 棋手的特別稱號：棋手檔名（_players/ 的檔名，不含 .md）: [稱號 id]
+# 手動指定的特別稱號：棋手檔名（_players/ 的檔名，不含 .md）: [稱號 id]
 # 稱號 id 見 _data/honors.yml。
-# member：會員且在入會表單選「同意顯示」才加（看會員名冊「名鑑稱號」欄）。
-# 寫在這裡而不是棋手檔，是因為棋手自助系統修改資料時會重寫棋手檔。
+# 「桂馬會會員」不要寫在這裡：由會員系統自動同步到 _data/member_players.yml。
+# 協力棋友、例會老面孔也不用寫：名字在 helpers.yml、regulars.yml 就會自動出現。
 #
-# wang-xiaoming: [member]
-xshogi: [member]
+# wang-xiaoming: [某個稱號 id]

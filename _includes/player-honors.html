@@ -2,9 +2,10 @@
 特別稱號（遊戲稱號式的名牌），放在棋手頁「頭銜與優勝」區塊最後。
 用法：{% include player-honors.html pid=pid hn=hn %}
   pid：棋手檔名；hn：比對協力棋友、例會老面孔名單用的名字（和優勝紀錄同一個）
-稱號定義：_data/honors.yml；手動指定：_data/player_honors.yml
+稱號定義：_data/honors.yml；會員：_data/member_players.yml（自動同步）；手動指定：_data/player_honors.yml
 {%- endcomment -%}
 {%- assign ids = "" | split: "" -%}
+{%- if site.data.member_players contains include.pid -%}{%- assign ids = ids | push: "member" -%}{%- endif -%}
 {%- for i in site.data.player_honors[include.pid] -%}{%- assign ids = ids | push: i -%}{%- endfor -%}
 {%- if include.hn and include.hn != "" -%}
   {%- for h in site.data.helpers -%}
