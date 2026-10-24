@@ -1,0 +1,153 @@
+/* 桂馬會 每日詰將棋 /tsume/ — 只作用在 #tsume 之內 */
+#tsume {
+  --wood: #e3bf7a;
+  --wood-dark: #c99a4b;
+  --line: #5b4321;
+  --piece: #f6e7c4;
+  --piece-edge: #a57c3c;
+  --ink: #1d1a16;
+  --red: #b3261e;
+  --ok: #2f6b3a;
+  --ng: #b3261e;
+  --hint-dot: rgba(47, 107, 58, .75);
+  --muted: color-mix(in srgb, currentColor 55%, transparent);
+  --rule: color-mix(in srgb, currentColor 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin: 1.5rem 0 2rem;
+  padding: 0; /* 網站的 section 預設有上下留白 */
+}
+#tsume .tsume-main { flex: 1 1 340px; max-width: 460px; min-width: 0; }
+#tsume .tsume-side { flex: 1 1 200px; min-width: 0; }
+
+#tsume button { font: inherit; color: inherit; }
+#tsume button:focus-visible { outline: 3px solid #2f6db3; outline-offset: 2px; }
+
+#tsume .tsume-head h2 { margin: 0 0 .25rem; font-size: 1.35rem; }
+#tsume .tsume-head p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+/* 棋盤 */
+.tsume-boardwrap { position: relative; }
+.tsume-files, .tsume-ranks { display: grid; color: var(--muted); font-size: .75rem; text-align: center; }
+.tsume-files { grid-template-columns: repeat(9, 1fr); margin-right: 1.25rem; padding: 0 6px; }
+.tsume-frame { display: grid; grid-template-columns: 1fr 1.25rem; }
+.tsume-ranks { grid-template-rows: repeat(9, 1fr); align-items: center; padding: 6px 0; aspect-ratio: auto; }
+.tsume-frame > .tsume-ranks { height: 100%; }
+.tsume-board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  aspect-ratio: 9 / 9.8;
+  background: var(--wood);
+  border: 6px solid var(--wood-dark);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.tsume-sq {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  min-width: 0;
+}
+.tsume-sq:nth-child(9n) { border-right: 0; }
+.tsume-sq:nth-last-child(-n+9) { border-bottom: 0; }
+.tsume-sq.is-target::after {
+  content: ""; position: absolute; z-index: 2; width: 26%; aspect-ratio: 1;
+  border-radius: 50%; background: var(--hint-dot); pointer-events: none;
+}
+.tsume-sq.is-target:has(.tsume-pc)::after { width: 80%; background: transparent; border: 3px solid var(--hint-dot); }
+.tsume-sq.is-last { background: rgba(179, 38, 30, .16); }
+.tsume-sq.is-sel { background: rgba(47, 109, 179, .28); }
+
+/* 棋子：五角形 */
+.tsume-pc {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 84%;
+  height: 90%;
+  padding-top: 8%;
+  clip-path: polygon(50% 0, 86% 16%, 100% 100%, 0 100%, 14% 16%);
+  background: linear-gradient(var(--piece), #ead3a3);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: clamp(.8rem, 4.4vw, 1.35rem);
+  line-height: 1;
+  filter: drop-shadow(0 1px 0 var(--piece-edge));
+}
+.tsume-pc.is-gote { transform: rotate(180deg); }
+.tsume-pc.is-prom { color: var(--red); }
+
+/* 持駒 */
+.tsume-hand {
+  display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+  min-height: 3.25rem; margin-top: .75rem; padding: .5rem;
+  border: 1px solid var(--rule); border-radius: 4px;
+}
+.tsume-hand::before { content: "▲ 持駒"; margin-right: .25rem; color: var(--muted); font-size: .85rem; }
+.tsume-hpc {
+  position: relative; display: grid; place-items: center;
+  width: 2.6rem; height: 2.8rem; padding: 0;
+  background: var(--wood); border: 1px solid var(--wood-dark); border-radius: 3px; cursor: pointer;
+}
+.tsume-hpc .tsume-pc { font-size: 1.05rem; }
+.tsume-hpc b {
+  position: absolute; right: -6px; top: -6px; min-width: 1.1rem; height: 1.1rem;
+  border-radius: 50%; background: var(--ink); color: #fff; font-size: .7rem; line-height: 1.1rem;
+}
+.tsume-hpc.is-sel { outline: 3px solid #2f6db3; }
+.tsume-none { color: var(--muted); font-size: .9rem; }
+#tsume .tsume-gotehand { margin: 0 0 .5rem; color: var(--muted); font-size: .85rem; }
+
+/* 訊息與按鈕 */
+#tsume .tsume-msg { min-height: 1.5em; margin: .75rem 0 .5rem; font-weight: 600; }
+.tsume-msg.is-ok { color: var(--ok); }
+.tsume-msg.is-ng { color: var(--ng); }
+.tsume-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tsume-actions button, .tsume-promo button {
+  padding: .5rem 1rem; border: 1px solid currentColor; border-radius: 4px;
+  background: transparent; cursor: pointer;
+}
+.tsume-promo {
+  display: flex; gap: .5rem; align-items: center; margin-top: .5rem; padding: .5rem;
+  border: 2px solid #2f6db3; border-radius: 4px;
+}
+.tsume-promo[hidden], .tsume-answer[hidden], .tsume-actions [hidden] { display: none; }
+.tsume-answer { margin: .75rem 0 0; padding: .5rem .75rem; border-left: 3px solid var(--red); }
+#tsume .tsume-log { display: flex; flex-wrap: wrap; gap: .25rem .75rem; margin: .75rem 0 0; padding: 0; list-style: none; }
+.tsume-log li.is-wrong { color: var(--ng); text-decoration: line-through; }
+
+/* 側欄 */
+.tsume-side { display: grid; gap: 1rem; }
+.tsume-streak { margin: 0; font-size: 1.05rem; }
+.tsume-streak b { font-size: 1.6rem; color: var(--red); }
+.tsume-calhead { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
+.tsume-calhead button {
+  width: 2rem; height: 2rem; border: 1px solid var(--rule); border-radius: 4px; background: transparent; cursor: pointer;
+}
+.tsume-calhead button:disabled { opacity: .3; cursor: default; }
+.tsume-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; max-width: 320px; }
+.tsume-wd { color: var(--muted); font-size: .75rem; }
+.tsume-day {
+  display: grid; place-items: center; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; font-size: .85rem; cursor: pointer;
+}
+.tsume-day.is-off { opacity: .35; cursor: default; }
+.tsume-day.is-solved { background: var(--ok); color: #fff; }
+.tsume-day.is-missed { box-shadow: inset 0 -3px 0 var(--ng); border-radius: 4px; }
+.tsume-day.is-cur { outline: 2px solid currentColor; }
+.tsume-legend { margin: .5rem 0 0; color: var(--muted); font-size: .8rem; }
+
+@media (prefers-reduced-motion: reduce) { #tsume * { transition: none !important; } }
+
+#tsume .tsume-side a { font-size: .95rem; }
+#tsume .tsume-legend { line-height: 1.6; }

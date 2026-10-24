@@ -1,0 +1,587 @@
+# 每日詰將棋題庫（由 build_tsume.py 產生）
+# 題目來源：たぬき詰将棋 https://github.com/tokuhirom/tanuki-tsume-shogi
+# Copyright (c) 2026 tokuhirom, MIT License
+# answer 為 USI 記法（含守方應手）；answer_text 供人工檢查。
+- date: '2026-11-01'
+  id: tanuki-3-537
+  moves: 3
+  sfen: 9/6S2/8k/9/9/9/9/9/9 b RGr2b3g3s4n4l18p 1
+  answer:
+  - R*2c
+  - 1c1b
+  - G*2b
+  answer_text: ▲2三飛打 △1二玉 ▲2二金打
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #537'
+- date: '2026-11-02'
+  id: tanuki-1-24
+  moves: 1
+  sfen: 8k/7P1/9/4B4/9/9/9/9/9 b 2rb4g4s4n4l17p 1
+  answer:
+  - 5d2a+
+  answer_text: ▲2一角成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #24'
+- date: '2026-11-03'
+  id: tanuki-1-30
+  moves: 1
+  sfen: 8k/9/8S/8L/9/9/9/9/9 b 2r2b4g3s4n3l18p 1
+  answer:
+  - 1c1b+
+  answer_text: ▲1二銀成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #30'
+- date: '2026-11-04'
+  id: tanuki-1-101
+  moves: 1
+  sfen: 6kl1/7R1/9/4N4/9/9/9/9/9 b r2b4g4s3n3l18p 1
+  answer:
+  - 2b4b+
+  answer_text: ▲4二飛成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #101'
+- date: '2026-11-05'
+  id: tanuki-1-16
+  moves: 1
+  sfen: 9/5PkS1/9/6G2/9/9/9/9/9 b 2r2b3g3s4n4l17p 1
+  answer:
+  - 3d3c
+  answer_text: ▲3三金
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #16'
+- date: '2026-11-06'
+  id: tanuki-1-178
+  moves: 1
+  sfen: 9/8l/8k/7R1/8S/9/9/9/9 b Nr2b4g3s3n3l18p 1
+  answer:
+  - N*2e
+  answer_text: ▲2五桂打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #178'
+- date: '2026-11-07'
+  id: tanuki-3-97
+  moves: 3
+  sfen: 6G2/8k/9/8S/9/8L/9/9/9 b 2r2b3g3s4n3l18p 1
+  answer:
+  - 1d1c+
+  - 1b1a
+  - 1c1b
+  answer_text: ▲1三銀成 △1一玉 ▲1二成銀
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #97'
+- date: '2026-11-08'
+  id: tanuki-3-478
+  moves: 3
+  sfen: 9/6S1k/9/7p1/9/9/9/9/9 b BS2rb4g2s4n4l17p 1
+  answer:
+  - S*2c
+  - 1b1a
+  - B*2b
+  answer_text: ▲2三銀打 △1一玉 ▲2二角打
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #478'
+- date: '2026-11-09'
+  id: tanuki-1-12
+  moves: 1
+  sfen: 9/5SkP1/9/9/8B/9/9/9/9 b 2rb4g3s4n4l17p 1
+  answer:
+  - 1e3c+
+  answer_text: ▲3三角成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #12'
+- date: '2026-11-10'
+  id: tanuki-1-13
+  moves: 1
+  sfen: 9/7R1/8k/7L1/9/9/9/9/9 b r2b4g4s4n3l18p 1
+  answer:
+  - 2b2c+
+  answer_text: ▲2三飛成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #13'
+- date: '2026-11-11'
+  id: tanuki-1-167
+  moves: 1
+  sfen: 7lk/9/8G/9/9/9/9/9/9 b L2r2b3g4s4n2l18p 1
+  answer:
+  - L*1b
+  answer_text: ▲1二香打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #167'
+- date: '2026-11-12'
+  id: tanuki-1-57
+  moves: 1
+  sfen: 9/5S1kS/9/8S/9/9/9/9/9 b r2b4gs4n4l18p 1
+  answer:
+  - 1d2c+
+  answer_text: ▲2三銀成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #57'
+- date: '2026-11-13'
+  id: tanuki-1-71
+  moves: 1
+  sfen: 9/5PkS1/9/9/9/9/9/9/9 b G2r2b3g3s4n4l17p 1
+  answer:
+  - G*3c
+  answer_text: ▲3三金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #71'
+- date: '2026-11-14'
+  id: tanuki-3-498
+  moves: 3
+  sfen: 6kS1/7L1/9/9/9/9/9/9/9 b RSr2b4g2s4n3l18p 1
+  answer:
+  - R*3b
+  - 3a4a
+  - S*5b
+  answer_text: ▲3二飛打 △4一玉 ▲5二銀打
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #498'
+- date: '2026-11-15'
+  id: tanuki-3-28
+  moves: 3
+  sfen: 6Ggk/9/8G/9/9/9/9/9/9 b 2r2bg4s4n4l17p 1
+  answer:
+  - 3a2a
+  - 1a2a
+  - G*2b
+  answer_text: ▲2一金 △同玉 ▲2二金打
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #28'
+- date: '2026-11-16'
+  id: tanuki-1-85
+  moves: 1
+  sfen: 6B1k/9/9/9/9/9/9/9/9 b G2rb3g4s4n4l18p 1
+  answer:
+  - G*2b
+  answer_text: ▲2二金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #85'
+- date: '2026-11-17'
+  id: tanuki-1-33
+  moves: 1
+  sfen: 5kg2/3G5/5G3/9/9/9/9/9/9 b 2r2bg4s4n4l18p 1
+  answer:
+  - 6b5b
+  answer_text: ▲5二金
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #33'
+- date: '2026-11-18'
+  id: tanuki-1-115
+  moves: 1
+  sfen: 8k/9/9/9/5B3/9/9/9/9 b G2rb3g4s4n4l18p 1
+  answer:
+  - G*1b
+  answer_text: ▲1二金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #115'
+- date: '2026-11-19'
+  id: tanuki-1-144
+  moves: 1
+  sfen: 9/8S/8k/9/8S/9/9/9/9 b G2r2b3g2s4n4l18p 1
+  answer:
+  - G*2c
+  answer_text: ▲2三金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #144'
+- date: '2026-11-20'
+  id: tanuki-1-126
+  moves: 1
+  sfen: 7G1/7Sk/7s1/9/9/9/9/9/9 b L2r2b3g2s4n3l18p 1
+  answer:
+  - L*1c
+  answer_text: ▲1三香打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #126'
+- date: '2026-11-21'
+  id: tanuki-3-59
+  moves: 3
+  sfen: 8k/7L1/9/7R1/9/9/9/9/9 b r2b4g4s4n3l18p 1
+  answer:
+  - 2b2a+
+  - 1a1b
+  - 2d2b+
+  answer_text: ▲2一香成 △1二玉 ▲2二飛成
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #59'
+- date: '2026-11-22'
+  id: tanuki-3-164
+  moves: 3
+  sfen: 9/8k/9/9/6R2/5B3/9/9/9 b Lrb4g4s4n3l18p 1
+  answer:
+  - 3e3b+
+  - P*2b
+  - L*1c
+  answer_text: ▲3二飛成 △2二步打 ▲1三香打
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #164'
+- date: '2026-11-23'
+  id: tanuki-1-227
+  moves: 1
+  sfen: 7Ss/6Sk1/9/9/9/9/9/9/9 b Rr2b4gs4n4l18p 1
+  answer:
+  - R*2c
+  answer_text: ▲2三飛打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #227'
+- date: '2026-11-24'
+  id: tanuki-1-160
+  moves: 1
+  sfen: 7Bk/7s1/9/9/9/9/9/9/9 b S2rb4g2s4n4l18p 1
+  answer:
+  - S*1b
+  answer_text: ▲1二銀打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #160'
+- date: '2026-11-25'
+  id: tanuki-1-1
+  moves: 1
+  sfen: 9/7Sk/1+R7/9/9/9/9/9/9 b r2b4g3s4n4l18p 1
+  answer:
+  - 8c1c
+  answer_text: ▲1三龍
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #1'
+- date: '2026-11-26'
+  id: tanuki-1-91
+  moves: 1
+  sfen: 5g3/6kS1/9/6P2/9/9/9/9/9 b 2r2b3g3s4n4l17p 1
+  answer:
+  - 3d3c+
+  answer_text: ▲3三步成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #91'
+- date: '2026-11-27'
+  id: tanuki-1-7
+  moves: 1
+  sfen: 7G1/8k/9/9/9/9/9/9/+B8 b 2rb3g4s4n4l18p 1
+  answer:
+  - 9i2b
+  answer_text: ▲2二馬
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #7'
+- date: '2026-11-28'
+  id: tanuki-3-520
+  moves: 3
+  sfen: 5Sk2/8S/9/8S/9/9/9/9/9 b 2R2b4gs4n4l18p 1
+  answer:
+  - R*3b
+  - 3a4a
+  - R*3a
+  answer_text: ▲3二飛打 △4一玉 ▲3一飛打
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #520'
+- date: '2026-11-29'
+  id: tanuki-3-67
+  moves: 3
+  sfen: 8k/8B/8L/8B/9/9/9/9/9 b 2r4g4s3n3l18p 1
+  answer:
+  - 1b2c+
+  - 1a2a
+  - 2c3b
+  answer_text: ▲2三角成 △2一玉 ▲3二馬
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #67'
+- date: '2026-11-30'
+  id: tanuki-1-212
+  moves: 1
+  sfen: 7S1/6Sk1/9/6P2/9/9/9/9/9 b Rr2b4g2s4n4l17p 1
+  answer:
+  - R*1b
+  answer_text: ▲1二飛打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #212'
+- date: '2026-12-01'
+  id: tanuki-1-100
+  moves: 1
+  sfen: 8G/9/6B1k/9/9/9/9/9/9 b G2rb2g4s4n4l18p 1
+  answer:
+  - G*2d
+  answer_text: ▲2四金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #100'
+- date: '2026-12-02'
+  id: tanuki-1-127
+  moves: 1
+  sfen: 7k1/9/9/7N1/8R/9/9/9/9 b Gr2b3g4s3n4l18p 1
+  answer:
+  - G*3b
+  answer_text: ▲3二金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #127'
+- date: '2026-12-03'
+  id: tanuki-1-2
+  moves: 1
+  sfen: 7k1/6P2/7G1/8L/9/9/9/9/9 b 2r2b3g4s4n3l17p 1
+  answer:
+  - 1d1b+
+  answer_text: ▲1二香成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #2'
+- date: '2026-12-04'
+  id: tanuki-1-48
+  moves: 1
+  sfen: 9/7Sk/9/9/7N1/9/9/9/9 b 2r2b4g3s3n3l18p 1
+  answer:
+  - 2e1c+
+  answer_text: ▲1三桂成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #48'
+- date: '2026-12-05'
+  id: tanuki-3-296
+  moves: 3
+  sfen: 9/9/6S1k/5R3/9/9/9/9/9 b Brb4g3s4n4l18p 1
+  answer:
+  - B*3a
+  - 1c1b
+  - 3a2b+
+  answer_text: ▲3一角打 △1二玉 ▲2二角成
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #296'
+- date: '2026-12-06'
+  id: tanuki-3-153
+  moves: 3
+  sfen: 3G2k2/4R4/9/9/9/9/9/9/9 b Sr2b3g3s4n4l18p 1
+  answer:
+  - S*2b
+  - 3a4a
+  - 6a5a
+  answer_text: ▲2二銀打 △4一玉 ▲5一金
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #153'
+- date: '2026-12-07'
+  id: tanuki-1-176
+  moves: 1
+  sfen: 7G1/8k/8p/9/9/9/9/9/9 b Rr2b3g4s4n4l17p 1
+  answer:
+  - R*2b
+  answer_text: ▲2二飛打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #176'
+- date: '2026-12-08'
+  id: tanuki-1-28
+  moves: 1
+  sfen: 9/6SkS/9/7G1/9/9/9/9/9 b 2r2b3g2s4n4l18p 1
+  answer:
+  - 2d2c
+  answer_text: ▲2三金
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #28'
+- date: '2026-12-09'
+  id: tanuki-1-162
+  moves: 1
+  sfen: 7lk/9/8G/9/9/9/9/9/9 b S2r2b3g3s4n3l18p 1
+  answer:
+  - S*1b
+  answer_text: ▲1二銀打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #162'
+- date: '2026-12-10'
+  id: tanuki-1-47
+  moves: 1
+  sfen: 6+RG1/8k/9/9/9/9/9/9/9 b r2b3g4s4n4l18p 1
+  answer:
+  - 3a2b
+  answer_text: ▲2二龍
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #47'
+- date: '2026-12-11'
+  id: tanuki-1-79
+  moves: 1
+  sfen: 9/7G1/8k/9/7B1/9/9/9/9 b G2rb2g4s4n4l18p 1
+  answer:
+  - G*2c
+  answer_text: ▲2三金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #79'
+- date: '2026-12-12'
+  id: tanuki-3-496
+  moves: 3
+  sfen: 5B3/9/8k/9/8G/9/9/9/9 b RLrb3g4s4n3l18p 1
+  answer:
+  - R*2c
+  - 1c1b
+  - L*1c
+  answer_text: ▲2三飛打 △1二玉 ▲1三香打
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #496'
+- date: '2026-12-13'
+  id: tanuki-3-475
+  moves: 3
+  sfen: 7G1/9/6Bpk/9/9/9/9/9/9 b Rrb3g4s4n4l17p 1
+  answer:
+  - R*1b
+  - 1c1b
+  - 3c2b+
+  answer_text: ▲1二飛打 △同玉 ▲2二角成
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #475'
+- date: '2026-12-14'
+  id: tanuki-1-8
+  moves: 1
+  sfen: 9/5PkS1/5R3/9/9/9/9/9/9 b r2b4g3s4n4l17p 1
+  answer:
+  - 4c3c+
+  answer_text: ▲3三飛成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #8'
+- date: '2026-12-15'
+  id: tanuki-1-41
+  moves: 1
+  sfen: 9/6SkS/9/9/9/4B4/9/9/9 b 2rb4g2s4n4l18p 1
+  answer:
+  - 5f2c+
+  answer_text: ▲2三角成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #41'
+- date: '2026-12-16'
+  id: tanuki-1-106
+  moves: 1
+  sfen: 6p2/7kS/9/7P1/9/9/9/9/9 b r2b4g3s4n4l16p 1
+  answer:
+  - 2d2c+
+  answer_text: ▲2三步成
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #106'
+- date: '2026-12-17'
+  id: tanuki-1-77
+  moves: 1
+  sfen: 9/7Sk/9/7L1/9/9/9/9/9 b L2r2b4g3s4n2l18p 1
+  answer:
+  - L*1c
+  answer_text: ▲1三香打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #77'
+- date: '2026-12-18'
+  id: tanuki-1-88
+  moves: 1
+  sfen: 7k1/5R3/9/6L2/9/9/9/9/9 b Sr2b4g3s4n3l18p 1
+  answer:
+  - S*1b
+  answer_text: ▲1二銀打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #88'
+- date: '2026-12-19'
+  id: tanuki-3-449
+  moves: 3
+  sfen: 6G2/6S1k/9/8P/9/9/9/9/9 b Rr2b3g3s4n4l17p 1
+  answer:
+  - R*1c
+  - 1b2b
+  - 3b2a+
+  answer_text: ▲1三飛打 △2二玉 ▲2一銀成
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #449'
+- date: '2026-12-20'
+  id: tanuki-3-396
+  moves: 3
+  sfen: 7k1/8p/9/9/6R2/9/9/9/9 b R2b4g4s4n4l17p 1
+  answer:
+  - R*3a
+  - 2a2b
+  - 3e3c+
+  answer_text: ▲3一飛打 △2二玉 ▲3三飛成
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #396'
+- date: '2026-12-21'
+  id: tanuki-1-118
+  moves: 1
+  sfen: 8k/9/7P1/9/9/9/9/9/9 b G2r2b3g4s4n4l17p 1
+  answer:
+  - G*2b
+  answer_text: ▲2二金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #118'
+- date: '2026-12-22'
+  id: tanuki-1-105
+  moves: 1
+  sfen: 7Bk/9/9/7R1/9/9/9/9/9 b Lrb4g4s4n3l18p 1
+  answer:
+  - L*1b
+  answer_text: ▲1二香打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #105'
+- date: '2026-12-23'
+  id: tanuki-1-133
+  moves: 1
+  sfen: 7S1/6Sk1/6s2/9/9/9/9/9/9 b G2r2b3gs4n4l18p 1
+  answer:
+  - G*1b
+  answer_text: ▲1二金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #133'
+- date: '2026-12-24'
+  id: tanuki-1-221
+  moves: 1
+  sfen: 9/6GSk/9/9/9/9/9/9/9 b Rr2b3g3s4n4l18p 1
+  answer:
+  - R*1c
+  answer_text: ▲1三飛打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #221'
+- date: '2026-12-25'
+  id: tanuki-1-154
+  moves: 1
+  sfen: 9/6RR1/8k/9/9/9/9/9/9 b G2b3g4s4n4l18p 1
+  answer:
+  - G*2d
+  answer_text: ▲2四金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #154'
+- date: '2026-12-26'
+  id: tanuki-3-264
+  moves: 3
+  sfen: 8k/9/4R4/9/9/9/9/9/9 b Gr2b3g4s4n4l18p 1
+  answer:
+  - 5c1c+
+  - P*1b
+  - G*2b
+  answer_text: ▲1三飛成 △1二步打 ▲2二金打
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #264'
+- date: '2026-12-27'
+  id: tanuki-3-279
+  moves: 3
+  sfen: 7S1/4B2G1/9/8k/9/9/9/9/9 b G2rb2g3s4n4l18p 1
+  answer:
+  - G*2e
+  - 1d1c
+  - 2a1b+
+  answer_text: ▲2五金打 △1三玉 ▲1二銀成
+  last_alt: []
+  source: 'たぬき詰将棋 3手詰 #279'
+- date: '2026-12-28'
+  id: tanuki-1-224
+  moves: 1
+  sfen: 8S/7Sk/9/9/9/9/9/9/9 b Rr2b4g2s4n4l18p 1
+  answer:
+  - R*1c
+  answer_text: ▲1三飛打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #224'
+- date: '2026-12-29'
+  id: tanuki-1-214
+  moves: 1
+  sfen: 6G2/7kP/9/8S/9/9/9/9/9 b Rr2b3g3s4n4l17p 1
+  answer:
+  - R*3b
+  answer_text: ▲3二飛打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #214'
+- date: '2026-12-30'
+  id: tanuki-1-114
+  moves: 1
+  sfen: 7k1/6R2/9/9/9/9/9/9/9 b Gr2b3g4s4n4l18p 1
+  answer:
+  - G*2b
+  answer_text: ▲2二金打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #114'
+- date: '2026-12-31'
+  id: tanuki-1-190
+  moves: 1
+  sfen: 6Br1/8k/9/8G/9/9/9/9/9 b Lrb3g4s4n3l18p 1
+  answer:
+  - L*1c
+  answer_text: ▲1三香打
+  last_alt: []
+  source: 'たぬき詰将棋 1手詰 #190'

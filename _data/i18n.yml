@@ -8,6 +8,7 @@ zh:
   nav:
     - { label: 入門, url: /learn/ }
     - { label: 資料庫, url: /db/ }
+    - { label: 詰將棋, url: /tsume/ }
     - { label: 例會, url: /#meetups }
     - { label: 活動報名, url: /#events }
     - { label: 棋戰, url: /titles/ }

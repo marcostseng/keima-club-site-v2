@@ -56,6 +56,8 @@ sitemap: false
 {% assign ls = site.lessons | sort: "order" -%}
 {% for l in ls %}- [第 {{ l.order }} 課：{{ l.title }}]({{ l.url | absolute_url }})：{{ l.description }}
 {% endfor %}
+每日詰將棋（每天一題，平日 1 手詰、週末 3 手詰，可在網頁棋盤上作答）：{{ "/tsume/" | absolute_url }}
+
 ## 專欄文章
 
 {% assign arts = site.pages | where: "article", true | sort: "date" | reverse -%}
