@@ -4,7 +4,8 @@
  *
  * 功能：
  *  1. setup() 建立入會申請表、會員名冊、觸發器
- *  2. 表單送出 → 寫入會員名冊（待繳費）→ 寄繳費說明信
+ *  2. 申請表送出 → 寫入會員名冊（待繳費）→ 寄繳費說明信、通知主辦人
+ *     繳費回報表送出 → 填入名冊的匯款末五碼 → 通知主辦人對帳
  *  3. 名冊「狀態」改為「已入會」→ 自動配發會員編號 → 寄歡迎信
  *  4. 網站 /member/ 的 Email 驗證碼登入（部署為網頁應用程式）
  *
@@ -20,7 +21,8 @@ const CFG = {
   PREFIX: 'KM-',
   DIGITS: 4,
   SITE: 'https://keima.club',
-  ADMIN_EMAIL: 'admin@keima.club',
+  ADMIN_EMAIL: 'admin@keima.club',   // 對外顯示、會員回信的信箱
+  NOTIFY_EMAIL: 'xshogi@gmail.com',  // 主辦人收通知（新申請、繳費回報）
   TZ: 'Asia/Taipei',
   SESSION_DAYS: 180,
   OTP_TTL: 600,      // 驗證碼有效 10 分鐘
@@ -48,7 +50,15 @@ const Q = {
   consent: '個人資料使用同意'
 };
 
-/* ───────────── 初始設定（在編輯器手動執行一次） ───────────── */
+// 繳費回報表題目
+const PQ = {
+  email: '入會申請時填寫的 Email',
+  last5: '匯款帳號末五碼',
+  date: '匯款日期',
+  note: '備註'
+};
+
+/* ───────────── 初始設定（在編輯器手動執行；可重複執行） ───────────── */
 
 function setup() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -90,13 +100,25 @@ function setup() {
     props.setProperty('FORM_ID', form.getId());
   }
 
+  // 繳費回報表
+  let payForm;
+  const payId = props.getProperty('PAY_FORM_ID');
+  if (payId) {
+    payForm = FormApp.openById(payId);
+  } else {
+    payForm = buildPayForm_();
+    payForm.setDestination(FormApp.DestinationType.SPREADSHEET, ss.getId());
+    props.setProperty('PAY_FORM_ID', payForm.getId());
+  }
+
   // 觸發器
   ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('handleFormSubmit').forSpreadsheet(ss).onFormSubmit().create();
   ScriptApp.newTrigger('handleEdit').forSpreadsheet(ss).onEdit().create();
   ScriptApp.newTrigger('cleanSessions').timeBased().everyDays(1).atHour(4).create();
 
-  Logger.log('入會申請表網址（填進 _data/links.yml 的 join_form）：\n' + form.getPublishedUrl());
+  Logger.log('入會申請表：\n' + form.getPublishedUrl());
+  Logger.log('繳費回報表（會自動附在繳費說明信裡）：\n' + payForm.getPublishedUrl());
 }
 
 function buildForm_() {
@@ -128,9 +150,34 @@ function buildForm_() {
   return f;
 }
 
+function buildPayForm_() {
+  const f = FormApp.create('桂馬會入會費繳費回報');
+  f.setDescription('匯款入會費 NT$1,000 後，請填寫這份表單，方便我們對帳。');
+  f.setConfirmationMessage('已收到繳費回報！確認入帳後，我們會寄出你的會員編號。');
+  f.addTextItem().setTitle(PQ.email).setRequired(true)
+    .setValidation(FormApp.createTextValidation().requireTextIsEmail().build());
+  f.addTextItem().setTitle(PQ.last5).setRequired(true)
+    .setValidation(FormApp.createTextValidation().requireTextMatchesPattern('^[0-9]{5}$')
+      .setHelpText('請填 5 位數字').build());
+  f.addDateItem().setTitle(PQ.date).setRequired(true);
+  f.addParagraphTextItem().setTitle(PQ.note).setHelpText('選填，例如用家人的帳戶匯款');
+  return f;
+}
+
+/* 繳費回報表網址，預先填好 Email */
+function payFormUrl_(email) {
+  const id = PropertiesService.getScriptProperties().getProperty('PAY_FORM_ID');
+  if (!id) return '';
+  const f = FormApp.openById(id);
+  const item = f.getItems().find(i => i.getTitle() === PQ.email);
+  if (!item) return f.getPublishedUrl();
+  return f.createResponse().withItemResponse(item.asTextItem().createResponse(email)).toPrefilledUrl();
+}
+
 /* ───────────── 表單送出 ───────────── */
 
 function handleFormSubmit(e) {
+  if (e.namedValues && e.namedValues[PQ.date]) return handlePayReport_(e);
   const v = k => String(((e.namedValues || {})[Q[k]] || [''])[0] || '').trim();
   const email = norm_(v('email'));
   const dup = findMember_(r => norm_(r.Email) === email && r.狀態 === STATUS.ACTIVE);
@@ -140,10 +187,10 @@ function handleFormSubmit(e) {
     姓名: v('name'),
     顯示名稱: v('display'),
     Email: email,
-    手機: v('phone'),
+    手機: txt_(v('phone')),
     段級位: v('rank'),
     繳費方式: v('pay'),
-    匯款末五碼: v('last5'),
+    匯款末五碼: txt_(v('last5')),
     未滿18歲: v('minor'),
     法定代理人: v('guardian'),
     名鑑稱號: v('badge'),
@@ -155,6 +202,34 @@ function handleFormSubmit(e) {
   };
   members_().appendRow(COLS.map(c => row[c]));
   if (!dup) sendApplyMail_(row);
+  notify_('【入會申請】' + row.顯示名稱 + '（' + row.繳費方式 + '）',
+    '有一筆新的入會申請。\n\n' +
+    '姓名：' + row.姓名 + '\n顯示名稱：' + row.顯示名稱 + '\nEmail：' + row.Email +
+    '\n程度：' + row.段級位 + '\n繳費方式：' + row.繳費方式 +
+    (row.未滿18歲 === '是' ? '\n未滿 18 歲，法定代理人：' + (row.法定代理人 || '（未填）') : '') +
+    (row.備註 ? '\n⚠ ' + row.備註 : '') +
+    '\n\n收到入會費後，把名冊的「狀態」改為「已入會」即可配發編號。\n' + ss_().getUrl());
+}
+
+function handlePayReport_(e) {
+  const v = t => String(((e.namedValues || {})[t] || [''])[0] || '').trim();
+  const email = norm_(v(PQ.email));
+  const last5 = v(PQ.last5);
+  const date = v(PQ.date);
+  const note = v(PQ.note);
+  const pending = rows_().filter(r => norm_(r.Email) === email && r.狀態 === STATUS.PENDING);
+  const r = pending[pending.length - 1];
+  if (r) {
+    const sh = members_();
+    sh.getRange(r._row, col_('匯款末五碼')).setValue(txt_(last5));
+    const memo = sh.getRange(r._row, col_('備註'));
+    memo.setValue([memo.getValue(), '匯款回報 ' + date + (note ? '（' + note + '）' : '')].filter(String).join('；'));
+  }
+  notify_('【入會繳費回報】' + (r ? r.顯示名稱 : email) + ' 末五碼 ' + last5,
+    (r ? '' : '⚠ 名冊裡找不到這個 Email 的「待繳費」申請，請人工核對。\n\n') +
+    'Email：' + email + '\n匯款帳號末五碼：' + last5 + '\n匯款日期：' + date +
+    (note ? '\n備註：' + note : '') +
+    '\n\n對帳無誤後，把名冊的「狀態」改為「已入會」即可配發編號。\n' + ss_().getUrl());
 }
 
 /* ───────────── 開通會員 ───────────── */
@@ -180,7 +255,15 @@ function activateRow_(rowNum) {
     const sh = members_();
     const noCell = sh.getRange(rowNum, col_('會員編號'));
     const mailCell = sh.getRange(rowNum, col_('編號信'));
-    if (!String(noCell.getValue()).trim()) {
+    const no = String(noCell.getValue()).trim();
+    if (no && rows_().filter(r => String(r.會員編號).trim() === no).length > 1) {
+      noCell.setBackground('#f4c7c3');
+      sh.getRange(rowNum, col_('備註')).setValue('⚠ 會員編號 ' + no + ' 重複，未寄信。修正後把狀態改回「已入會」');
+      toast_('會員編號 ' + no + ' 重複，未寄信。');
+      return false;
+    }
+    noCell.setBackground(null);
+    if (!no) {
       noCell.setValue(nextNumber_());
       sh.getRange(rowNum, col_('入會日期')).setValue(new Date());
     }
@@ -373,7 +456,7 @@ function sendApplyMail_(m) {
   const howToPay = m.繳費方式 === '例會現場繳費'
     ? '你選擇「例會現場繳費」：請在下次例會向工作人員繳交 NT$1,000。\n例會時間：' + CFG.SITE + '/#meetups'
     : '你選擇「銀行匯款」：請匯款 NT$1,000 到以下帳戶。\n' + payInfo +
-      (m.匯款末五碼 ? '' : '\n匯款後請回覆這封信告訴我們帳號末五碼，方便對帳。');
+      '\n\n匯款後請填寫繳費回報表，方便我們對帳：\n' + (payFormUrl_(m.Email) || '（或直接回覆這封信，告訴我們帳號末五碼）');
   mail_(m.Email, '【桂馬會】已收到入會申請',
     m.顯示名稱 + ' 你好：\n\n' +
     '已收到你的入會申請，謝謝！入會費 NT$1,000（一次性，無年費）。\n\n' +
@@ -402,6 +485,14 @@ function sendWelcomeMail_(m) {
     '\n有任何問題，直接回覆這封信即可。\n\n桂馬會日本將棋俱樂部\n' + CFG.SITE);
 }
 
+function notify_(subject, body) {
+  MailApp.sendEmail({ to: CFG.NOTIFY_EMAIL, subject: subject, body: body, name: '桂馬會會員系統' });
+}
+
+function toast_(msg) {
+  try { SpreadsheetApp.getActiveSpreadsheet().toast(msg, '桂馬會', 8); } catch (err) {}
+}
+
 function mail_(to, subject, body) {
   MailApp.sendEmail({ to: to, subject: subject, body: body, name: '桂馬會', replyTo: CFG.ADMIN_EMAIL });
 }
@@ -413,6 +504,8 @@ function members_() { return ss_().getSheetByName(CFG.MEMBERS); }
 function sessions_() { return ss_().getSheetByName(CFG.SESSIONS); }
 function col_(name) { return COLS.indexOf(name) + 1; }
 function norm_(s) { return String(s || '').trim().toLowerCase(); }
+/* 開頭加 ' 讓試算表當文字存，保留手機、帳號開頭的 0（' 不會顯示） */
+function txt_(s) { return s ? "'" + s : ''; }
 
 function rows_() {
   const sh = members_();

@@ -33,7 +33,7 @@ description: 入會費 NT$1,000，一次性繳費、無年費。會員權益、�
 
 <ol class="steps">
   <li><strong>填寫入會申請表</strong><br>送出後，會收到繳費說明的 Email</li>
-  <li><strong>繳交入會費 NT$1,000</strong><br>可以匯款（回覆那封信告訴我們轉帳帳號末 5 碼），或在例會現場繳費</li>
+  <li><strong>繳交入會費 NT$1,000</strong><br>可以匯款（匯款後填寫 Email 裡的繳費回報表），或在例會現場繳費</li>
   <li><strong>確認入帳，收到會員編號</strong><br>Email 會附上你的會員編號，以及加入會員專屬 LINE 群的方式</li>
   <li><strong>登入會員專區</strong><br>到<a href="/member/">會員專區</a>用入會時的 Email 收驗證碼登入，查看會員證與會員教材</li>
 </ol>
