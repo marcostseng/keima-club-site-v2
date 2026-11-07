@@ -1,0 +1,15 @@
+{%- comment -%}
+文章照片。用法：
+{% include photo.html src="/assets/img/articles/檔名.jpg" alt="照片內容" credit="攝影：桂馬會" %}
+外部圖片（僅限可再利用授權，例如 Wikimedia Commons）：
+{% include photo.html src="https://upload.wikimedia.org/..." alt="..." credit="作者 / CC BY-SA 4.0" credit_url="https://commons.wikimedia.org/wiki/File:..." %}
+{%- endcomment -%}
+<figure class="photo">
+  <img src="{{ include.src }}" alt="{{ include.alt }}" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:8px">
+  {%- if include.caption or include.credit %}
+  <figcaption style="font-size:13px;opacity:.75;margin-top:6px">
+    {{ include.caption }}{% if include.caption and include.credit %}｜{% endif %}
+    {%- if include.credit_url %}<a href="{{ include.credit_url }}" rel="noopener" target="_blank">{{ include.credit }}</a>{% else %}{{ include.credit }}{% endif %}
+  </figcaption>
+  {%- endif %}
+</figure>
